@@ -24,6 +24,11 @@ public class UserEntity {
 
     private String lastName;
 
+    @Column(unique = true, nullable = false)
+    private String emailAddress;
+
+    private String password;
+
     private final LocalDateTime dateJoined = LocalDateTime.now();
 
 }
