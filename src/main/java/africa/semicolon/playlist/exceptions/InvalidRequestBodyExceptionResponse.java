@@ -1,4 +1,4 @@
-package net.upreviews.api.exceptions;
+package africa.semicolon.playlist.exceptions;
 
 import lombok.Builder;
 import lombok.Data;

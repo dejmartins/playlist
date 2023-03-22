@@ -1,4 +1,4 @@
-package africa.semicolon.playlist.user.security;
+package africa.semicolon.playlist.auth.security;
 
 import africa.semicolon.playlist.user.data.models.UserEntity;
 import lombok.Builder;
