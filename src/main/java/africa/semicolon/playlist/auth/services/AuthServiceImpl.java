@@ -1,14 +1,13 @@
-package africa.semicolon.playlist.auth.services.impl;
+package africa.semicolon.playlist.auth.services;
 
 import africa.semicolon.playlist.auth.dtos.requests.LoginRequestDto;
 import africa.semicolon.playlist.auth.dtos.requests.SignupRequestDto;
 import africa.semicolon.playlist.auth.dtos.responses.TokenResponseDto;
-import africa.semicolon.playlist.auth.exceptions.InvalidLoginDetailsException;
-import africa.semicolon.playlist.auth.exceptions.UsernameAlreadyUsedException;
+import africa.semicolon.playlist.exception.userExceptions.InvalidLoginDetailsException;
+import africa.semicolon.playlist.exception.userExceptions.UserAlreadyExistsException;
 import africa.semicolon.playlist.auth.security.JwtGenerator;
-import africa.semicolon.playlist.user.data.models.UserEntity;
+import africa.semicolon.playlist.user.data.models.User;
 import africa.semicolon.playlist.user.data.repositories.UserRepository;
-import africa.semicolon.playlist.auth.services.AuthService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,17 +44,17 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public TokenResponseDto createAccount(SignupRequestDto requestDto) {
         if (userRepository.existsByEmailAddress(requestDto.getEmail())) {
-            throw new UsernameAlreadyUsedException();
+            throw new UserAlreadyExistsException();
         }
 
-        UserEntity user = UserEntity.builder()
+        User user = User.builder()
                 .firstName(requestDto.getFirstName())
                 .lastName(requestDto.getLastName())
                 .emailAddress(requestDto.getEmail())
                 .password(passwordEncoder.encode(requestDto.getPassword()))
                 .build();
 
-        UserEntity savedUser = userRepository.save(user);
+        User savedUser = userRepository.save(user);
         String token = jwtGenerator.generateToken(savedUser);
         return TokenResponseDto.builder().token("Bearer " + token).build();
     }

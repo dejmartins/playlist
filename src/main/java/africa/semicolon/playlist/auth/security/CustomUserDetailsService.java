@@ -1,6 +1,6 @@
 package africa.semicolon.playlist.auth.security;
 
-import africa.semicolon.playlist.user.data.models.UserEntity;
+import africa.semicolon.playlist.user.data.models.User;
 import africa.semicolon.playlist.user.data.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,13 +22,14 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserEntity userEntity =
+        User user =
                 userRepository.findByEmailAddress(email)
                         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         return AuthenticatedUser.builder()
-                .userEntity(userEntity)
-                .roles(List.of("ROLE_USER"))
+                .user(user)
+                //TODO: Add user roles
+                .roles(List.of("USER_ROLE"))
                 .build();
     }
 

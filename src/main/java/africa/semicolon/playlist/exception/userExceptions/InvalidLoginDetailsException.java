@@ -1,9 +1,9 @@
-package africa.semicolon.playlist.auth.exceptions;
+package africa.semicolon.playlist.exception.userExceptions;
 
-import africa.semicolon.playlist.exceptions.BusinessLogicException;
+import africa.semicolon.playlist.exception.PlaylistException;
 import org.springframework.http.HttpStatus;
 
-public class InvalidLoginDetailsException extends BusinessLogicException {
+public class InvalidLoginDetailsException extends PlaylistException {
 
     public InvalidLoginDetailsException() {
         this("Invalid login details");
