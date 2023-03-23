@@ -84,7 +84,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-<<<<<<< Updated upstream
+<!--<<<<<<< Updated upstream-->
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
@@ -126,7 +126,7 @@
 			<artifactId>modelmapper</artifactId>
 			<version>3.1.0</version>
 		</dependency>
-=======
+<!--=======-->
 
 		<!-- https://mvnrepository.com/artifact/se.michaelthelin.spotify/spotify-web-api-java -->
 		<dependency>
@@ -136,7 +136,7 @@
 		</dependency>
 
 
->>>>>>> Stashed changes
+<!--&gt;>>>>>> Stashed changes-->
 	</dependencies>
 
 	<build>
