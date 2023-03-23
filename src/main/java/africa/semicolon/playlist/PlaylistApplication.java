@@ -1,5 +1,6 @@
 package africa.semicolon.playlist;
 
+<<<<<<< Updated upstream
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.SpringApplication;
@@ -11,6 +12,15 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 		info = @Info(title = "Playlist API", version = "v0.0.1-SNAPSHOT")
 )
 @ConfigurationPropertiesScan
+=======
+import africa.semicolon.playlist.configExtra.RestTemplateConfig;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Import;
+
+@SpringBootApplication
+@Import(RestTemplateConfig.class)
+>>>>>>> Stashed changes
 public class PlaylistApplication {
 
 	public static void main(String[] args) {
