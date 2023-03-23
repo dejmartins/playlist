@@ -1,6 +1,6 @@
 package africa.semicolon.playlist.auth.security;
 
-import africa.semicolon.playlist.user.data.models.UserEntity;
+import africa.semicolon.playlist.user.data.models.User;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,16 +15,16 @@ import java.util.stream.Collectors;
 @Builder
 public class AuthenticatedUser implements UserDetails {
 
-    private UserEntity userEntity;
+    private User user;
 
     private List<String> roles;
 
     public String getUsername() {
-        return userEntity.getEmailAddress();
+        return user.getEmailAddress();
     }
 
     public String getPassword() {
-        return userEntity.getPassword();
+        return user.getPassword();
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities() {

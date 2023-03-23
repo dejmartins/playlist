@@ -3,11 +3,11 @@ package africa.semicolon.playlist.auth.services.impl;
 import africa.semicolon.playlist.auth.dtos.requests.LoginRequestDto;
 import africa.semicolon.playlist.auth.dtos.requests.SignupRequestDto;
 import africa.semicolon.playlist.auth.dtos.responses.TokenResponseDto;
-import africa.semicolon.playlist.auth.exceptions.InvalidLoginDetailsException;
-import africa.semicolon.playlist.auth.exceptions.UsernameAlreadyUsedException;
+import africa.semicolon.playlist.exception.userExceptions.InvalidLoginDetailsException;
+import africa.semicolon.playlist.exception.userExceptions.UserAlreadyExistsException;
 import africa.semicolon.playlist.auth.security.JwtGenerator;
 import africa.semicolon.playlist.auth.services.AuthService;
-import africa.semicolon.playlist.user.data.models.UserEntity;
+import africa.semicolon.playlist.user.data.models.User;
 import africa.semicolon.playlist.user.data.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -90,7 +90,7 @@ class AuthServiceImplTest {
                 .password("password")
                 .build();
 
-        var savedUser = UserEntity.builder()
+        var savedUser = User.builder()
                 .id(1L)
                 .firstName(requestDto.getFirstName())
                 .lastName(requestDto.getLastName())
@@ -115,6 +115,6 @@ class AuthServiceImplTest {
 
 
         when(userRepository.existsByEmailAddress(requestDto.getEmail())).thenReturn(true);
-        assertThrows(UsernameAlreadyUsedException.class, () -> authService.createAccount(requestDto));
+        assertThrows(UserAlreadyExistsException.class, () -> authService.createAccount(requestDto));
     }
 }

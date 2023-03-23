@@ -1,6 +1,6 @@
 package africa.semicolon.playlist.auth.security;
 
-import africa.semicolon.playlist.user.data.models.UserEntity;
+import africa.semicolon.playlist.user.data.models.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -22,7 +22,7 @@ public class JwtGenerator {
     @Value("${security.constants.jwtSecretKey}")
     private String jwtSecretKey;
 
-    public String generateToken(UserEntity user) {
+    public String generateToken(User user) {
         String username = user.getEmailAddress();
         return generateToken(username);
     }
