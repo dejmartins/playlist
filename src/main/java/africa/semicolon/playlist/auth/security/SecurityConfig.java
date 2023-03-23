@@ -1,4 +1,4 @@
-package africa.semicolon.playlist.user.security;
+package africa.semicolon.playlist.auth.security;
 
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,8 @@ public class SecurityConfig {
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final JwtAuthenticationFilter authenticationFilter;
 
+    private final String[] permittedRoutes = {"/api/v1/auth/signup", "/api/v1/auth/login"};
+
     @Autowired
     public SecurityConfig(AuthenticationEntryPoint authenticationEntryPoint,
                           JwtAuthenticationFilter authenticationFilter) {
@@ -44,7 +46,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/user/signup", "/api/v1/user/login").permitAll()
+                .requestMatchers(permittedRoutes).permitAll()
                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated()
                 .and()

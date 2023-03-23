@@ -1,4 +1,4 @@
-package africa.semicolon.playlist.user.security;
+package africa.semicolon.playlist.auth.security;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
