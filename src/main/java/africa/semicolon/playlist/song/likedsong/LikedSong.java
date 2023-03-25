@@ -1,6 +1,7 @@
-package africa.semicolon.playlist.song.demoSong.model;
+package africa.semicolon.playlist.song.likedsong;
 
-import africa.semicolon.playlist.user.AppUser;
+import africa.semicolon.playlist.song.demoSong.Song;
+import africa.semicolon.playlist.user.data.models.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,14 +11,15 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LikeSong {
+public class LikedSong {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long songId;
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Song song;
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private AppUser appUser;
+    private UserEntity userEntity;
     private boolean liked;
     private boolean dislike;
+
 }

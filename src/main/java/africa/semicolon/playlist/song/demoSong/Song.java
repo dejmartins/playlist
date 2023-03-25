@@ -1,4 +1,4 @@
-package africa.semicolon.playlist.song.demoSong.model;
+package africa.semicolon.playlist.song.demoSong;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
@@ -30,6 +30,5 @@ public class Song {
     private String albumName;
     private String duration;
     private String externalHref;
-
 
 }
