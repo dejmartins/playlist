@@ -28,9 +28,7 @@ class AuthControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     private final ObjectMapper objectMapper = new ObjectMapper();
-
     @MockBean
     private AuthService authService;
 
