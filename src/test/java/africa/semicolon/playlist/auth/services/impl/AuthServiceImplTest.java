@@ -3,10 +3,10 @@ package africa.semicolon.playlist.auth.services.impl;
 import africa.semicolon.playlist.auth.dtos.requests.LoginRequestDto;
 import africa.semicolon.playlist.auth.dtos.requests.SignupRequestDto;
 import africa.semicolon.playlist.auth.dtos.responses.TokenResponseDto;
-import africa.semicolon.playlist.exception.userExceptions.InvalidLoginDetailsException;
-import africa.semicolon.playlist.exception.userExceptions.UserAlreadyExistsException;
 import africa.semicolon.playlist.auth.security.JwtGenerator;
 import africa.semicolon.playlist.auth.services.AuthService;
+import africa.semicolon.playlist.exception.userExceptions.InvalidLoginDetailsException;
+import africa.semicolon.playlist.exception.userExceptions.UserAlreadyExistsException;
 import africa.semicolon.playlist.user.data.models.User;
 import africa.semicolon.playlist.user.data.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,6 @@ import static org.mockito.Mockito.when;
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 @Slf4j
 class AuthServiceImplTest {
-
     @Autowired
     private AuthService authService;
 
