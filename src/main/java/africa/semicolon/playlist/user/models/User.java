@@ -1,5 +1,6 @@
-package africa.semicolon.playlist.user.data.models;
+package africa.semicolon.playlist.user.models;
 
+import africa.semicolon.playlist.wallet.Wallet;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,5 +24,8 @@ public class User {
     @Column(unique = true, nullable = false)
     private String emailAddress;
     private final LocalDateTime dateJoined = LocalDateTime.now();
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name="wallet_id", referencedColumnName="id")
+    private Wallet wallet;
 
 }

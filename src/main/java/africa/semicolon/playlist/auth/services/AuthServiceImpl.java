@@ -6,8 +6,10 @@ import africa.semicolon.playlist.auth.dtos.responses.TokenResponseDto;
 import africa.semicolon.playlist.exception.userExceptions.InvalidLoginDetailsException;
 import africa.semicolon.playlist.exception.userExceptions.UserAlreadyExistsException;
 import africa.semicolon.playlist.auth.security.JwtGenerator;
-import africa.semicolon.playlist.user.data.models.User;
-import africa.semicolon.playlist.user.data.repositories.UserRepository;
+import africa.semicolon.playlist.user.models.User;
+import africa.semicolon.playlist.user.repositories.UserRepository;
+import africa.semicolon.playlist.wallet.Wallet;
+import africa.semicolon.playlist.wallet.WalletRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,12 +18,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 @AllArgsConstructor
 @Slf4j
 public class AuthServiceImpl implements AuthService {
 
     private UserRepository userRepository;
+    private WalletRepository walletRepository;
     private PasswordEncoder passwordEncoder;
     private JwtGenerator jwtGenerator;
     private AuthenticationManager authenticationManager;
@@ -47,15 +52,26 @@ public class AuthServiceImpl implements AuthService {
             throw new UserAlreadyExistsException();
         }
 
+        Wallet wallet = createWallet();
+
         User user = User.builder()
                 .firstName(requestDto.getFirstName())
                 .lastName(requestDto.getLastName())
                 .emailAddress(requestDto.getEmail())
                 .password(passwordEncoder.encode(requestDto.getPassword()))
+                .wallet(wallet)
                 .build();
 
         User savedUser = userRepository.save(user);
         String token = jwtGenerator.generateToken(savedUser);
         return TokenResponseDto.builder().token("Bearer " + token).build();
+    }
+
+    private Wallet createWallet(){
+        Wallet wallet = Wallet.builder()
+                .balance(BigDecimal.valueOf(0))
+                .build();
+
+        return walletRepository.save(wallet);
     }
 }

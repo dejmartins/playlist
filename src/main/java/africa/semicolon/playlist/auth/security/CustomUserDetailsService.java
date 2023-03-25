@@ -1,7 +1,7 @@
 package africa.semicolon.playlist.auth.security;
 
-import africa.semicolon.playlist.user.data.models.User;
-import africa.semicolon.playlist.user.data.repositories.UserRepository;
+import africa.semicolon.playlist.user.models.User;
+import africa.semicolon.playlist.user.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
