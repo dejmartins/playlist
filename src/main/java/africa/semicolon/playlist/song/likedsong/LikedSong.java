@@ -1,7 +1,7 @@
 package africa.semicolon.playlist.song.likedsong;
 
 import africa.semicolon.playlist.song.demoSong.Song;
-import africa.semicolon.playlist.user.UserEntity;
+import africa.semicolon.playlist.user.data.models.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

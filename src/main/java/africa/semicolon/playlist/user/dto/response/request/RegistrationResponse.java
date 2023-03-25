@@ -1,12 +1,12 @@
 package africa.semicolon.playlist.user.dto.response.request;
 
-import jakarta.persistence.Entity;
 import lombok.*;
 
 @Setter
 @Getter
 @Builder
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class RegistrationResponse {
     private String message;
     private boolean success;

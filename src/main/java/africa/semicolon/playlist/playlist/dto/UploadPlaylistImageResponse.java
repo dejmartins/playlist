@@ -1,6 +1,18 @@
 package africa.semicolon.playlist.playlist.dto;
 
-public class UploadPlaylistResponse {
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
-    private
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class UploadPlaylistImageResponse {
+
+    private HttpStatus status;
+    private String message;
+
 }

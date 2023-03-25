@@ -1,2 +1,6 @@
-package africa.semicolon.playlist.song.dto;public class CreateSongResponse {
+package africa.semicolon.playlist.song.dto;
+
+public class CreateSongResponse {
+
+
 }
