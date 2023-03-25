@@ -1,4 +1,4 @@
-package africa.semicolon.playlist.exceptions;
+package africa.semicolon.playlist.exception;
 
 import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
@@ -16,11 +16,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
-public class BusinessLoginExceptionHandler extends ResponseEntityExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(BusinessLogicException.class)
-    private ResponseEntity<BusinessLogicExceptionResponse> handleException(BusinessLogicException e) {
-        var response = BusinessLogicExceptionResponse.builder()
+    @ExceptionHandler(PlaylistException.class)
+    private ResponseEntity<ExceptionResponse> handleException(PlaylistException e) {
+        var response = ExceptionResponse.builder()
                 .message(e.getMessage())
                 .status(e.getStatus())
                 .build();
@@ -42,9 +42,9 @@ public class BusinessLoginExceptionHandler extends ResponseEntityExceptionHandle
         }
 
         var response =
-                InvalidRequestBodyExceptionResponse.builder()
+                ExceptionResponse.builder()
                         .data(data)
-                        .message("Bad request")
+                        .message("Bad Request")
                         .status(status)
                         .statusCode(status.value())
                         .build();
