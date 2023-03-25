@@ -1,4 +1,4 @@
-package africa.semicolon.playlist.playlistSong.demoPlaylistSong;
+package africa.semicolon.playlist.playlistUser.demoPlaylistUser;
 
 import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.user.data.models.UserEntity;
@@ -21,7 +21,7 @@ public class PlaylistUser {
     private Long id;
     @ManyToOne
     private UserEntity user;
-
     @ManyToOne
     private PlayList playList;
+
 }

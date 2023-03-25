@@ -1,15 +1,20 @@
 package africa.semicolon.playlist.playlistSong.repository;
 
 
-import africa.semicolon.playlist.playlistSong.demoPlaylistSong.PlaylistUser;
 import africa.semicolon.playlist.playlist.demo.PlayList;
-import africa.semicolon.playlist.user.data.models.UserEntity;
-import org.springframework.data.repository.CrudRepository;
-import java.util.List;
+import africa.semicolon.playlist.playlistSong.demo.PlaylistSongEntity;
+import africa.semicolon.playlist.song.demoSong.Song;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface PlaylistSongRepository extends CrudRepository<PlaylistUser, Long>{
+import java.util.Optional;
 
-    List<PlaylistUser> findByUser(UserEntity userEntity);
 
-    List<PlaylistUser> findByPlayList(PlayList playList);
+@Repository
+public interface PlaylistSongRepository extends JpaRepository<PlaylistSongEntity, Long> {
+
+    Optional<PlaylistSongEntity> findByPlayListAndSong(PlayList playList, Song song);
+
+
+
 }

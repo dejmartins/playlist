@@ -1,5 +1,6 @@
 package africa.semicolon.playlist.playlist.service;
 
+import africa.semicolon.playlist.ApiResponse;
 import africa.semicolon.playlist.cloud.CloudService;
 import africa.semicolon.playlist.exceptions.PlaylistNotFoundException;
 import africa.semicolon.playlist.playlist.demo.PlayList;
@@ -79,6 +80,31 @@ public class PlaylistServiceImpl implements PlaylistService {
                 .slug(foundPlaylist.getSlug())
                 .isPublic(foundPlaylist.getIsPublic())
                 .build();
+    }
+
+    @Override
+    public ApiResponse deletePlaylistBySlug(String slug) {
+        PlayList foundPlaylist = playlistRepository.findBySlug(slug).orElseThrow(PlaylistNotFoundException::new);
+        playlistRepository.delete(foundPlaylist);
+        return ApiResponse.builder()
+                .status(HttpStatus.OK)
+                .message("SUCCESSFUL")
+                .build();
+    }
+
+    @Override
+    public ApiResponse deletePlaylistById(Long playlistId) {
+        PlayList foundPlaylist = playlistRepository.findById(playlistId).orElseThrow(PlaylistNotFoundException::new);
+        playlistRepository.delete(foundPlaylist);
+        return ApiResponse.builder()
+                .status(HttpStatus.OK)
+                .message("SUCCESSFUL")
+                .build();
+    }
+
+    @Override
+    public FindPlaylistResponse updatePlaylistDetails() {
+        return null;
     }
 
     private Optional<PlayList> privateFindPlaylistById(Long playlistId) {
