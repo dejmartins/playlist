@@ -3,12 +3,14 @@ package africa.semicolon.playlist.cloud;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Map;
 
 @AllArgsConstructor
+@Service
 public class CloudinaryServiceImpl implements CloudService{
     private final Cloudinary cloudinary;
 

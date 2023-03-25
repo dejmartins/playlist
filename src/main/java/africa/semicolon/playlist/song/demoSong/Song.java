@@ -24,7 +24,7 @@ public class Song {
     private String title;
     private String artiste;
     private String image;
-    private int explicit;
+    private boolean explicit;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date releaseDate;
     private String albumName;
