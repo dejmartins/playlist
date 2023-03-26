@@ -26,14 +26,7 @@ public class SecurityConfig {
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final JwtAuthenticationFilter authenticationFilter;
 
-    private final String[] permittedRoutes = {"/api/v1/auth/signup", "/api/v1/auth/login", "/api/spotify/song/{trackName}"};
-
-    @Autowired
-    public SecurityConfig(AuthenticationEntryPoint authenticationEntryPoint,
-                          JwtAuthenticationFilter authenticationFilter) {
-        this.authenticationEntryPoint = authenticationEntryPoint;
-        this.authenticationFilter = authenticationFilter;
-    }
+    private final String[] permittedRoutes = {"/api/v1/auth/signup", "/api/v1/auth/login"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

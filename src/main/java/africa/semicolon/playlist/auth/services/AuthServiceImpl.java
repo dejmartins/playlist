@@ -6,7 +6,7 @@ import africa.semicolon.playlist.auth.dtos.responses.TokenResponseDto;
 import africa.semicolon.playlist.exception.userExceptions.InvalidLoginDetailsException;
 import africa.semicolon.playlist.exception.userExceptions.UserAlreadyExistsException;
 import africa.semicolon.playlist.auth.security.JwtGenerator;
-import africa.semicolon.playlist.user.data.models.User;
+import africa.semicolon.playlist.user.data.models.UserEntity;
 import africa.semicolon.playlist.user.data.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,15 +47,15 @@ public class AuthServiceImpl implements AuthService {
             throw new UserAlreadyExistsException();
         }
 
-        User user = User.builder()
+        UserEntity userEntity = UserEntity.builder()
                 .firstName(requestDto.getFirstName())
                 .lastName(requestDto.getLastName())
                 .emailAddress(requestDto.getEmail())
                 .password(passwordEncoder.encode(requestDto.getPassword()))
                 .build();
 
-        User savedUser = userRepository.save(user);
-        String token = jwtGenerator.generateToken(savedUser);
+        UserEntity savedUserEntity = userRepository.save(userEntity);
+        String token = jwtGenerator.generateToken(savedUserEntity);
         return TokenResponseDto.builder().token("Bearer " + token).build();
     }
 }

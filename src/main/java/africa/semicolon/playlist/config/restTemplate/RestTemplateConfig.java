@@ -1,4 +1,4 @@
-package africa.semicolon.playlist.configExtra;
+package africa.semicolon.playlist.config.restTemplate;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

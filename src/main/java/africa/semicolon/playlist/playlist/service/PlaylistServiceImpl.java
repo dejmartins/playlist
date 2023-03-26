@@ -1,13 +1,15 @@
 package africa.semicolon.playlist.playlist.service;
 
-import africa.semicolon.playlist.cloud.CloudService;
-import africa.semicolon.playlist.exceptions.PlaylistNotFoundException;
+import africa.semicolon.playlist.ApiResponse;
+import africa.semicolon.playlist.config.cloud.CloudService;
+import africa.semicolon.playlist.exception.PlaylistNotFoundException;
 import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.playlist.dto.CreatePlaylistReq;
 import africa.semicolon.playlist.playlist.dto.CreatePlaylistResponse;
 import africa.semicolon.playlist.playlist.dto.FindPlaylistResponse;
 import africa.semicolon.playlist.playlist.dto.UploadPlaylistImageResponse;
 import africa.semicolon.playlist.playlist.repository.PlaylistRepository;
+import com.github.fge.jsonpatch.JsonPatch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -79,6 +81,31 @@ public class PlaylistServiceImpl implements PlaylistService {
                 .slug(foundPlaylist.getSlug())
                 .isPublic(foundPlaylist.getIsPublic())
                 .build();
+    }
+
+    @Override
+    public ApiResponse deletePlaylistBySlug(String slug) {
+        PlayList foundPlaylist = playlistRepository.findBySlug(slug).orElseThrow(PlaylistNotFoundException::new);
+        playlistRepository.delete(foundPlaylist);
+        return ApiResponse.builder()
+                .status(HttpStatus.OK)
+                .message("SUCCESSFUL")
+                .build();
+    }
+
+    @Override
+    public ApiResponse deletePlaylistById(Long playlistId) {
+        PlayList foundPlaylist = playlistRepository.findById(playlistId).orElseThrow(PlaylistNotFoundException::new);
+        playlistRepository.delete(foundPlaylist);
+        return ApiResponse.builder()
+                .status(HttpStatus.OK)
+                .message("SUCCESSFUL")
+                .build();
+    }
+
+    @Override
+    public FindPlaylistResponse updatePlaylistDetails(JsonPatch jsonPatch) {
+        return null;
     }
 
     private Optional<PlayList> privateFindPlaylistById(Long playlistId) {
