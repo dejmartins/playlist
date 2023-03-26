@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 public class UserNotFoundException extends PlaylistException {
 
     public UserNotFoundException() {
-        this("User ot found");
+        this("User not found");
     }
 
     public UserNotFoundException(String message) {
