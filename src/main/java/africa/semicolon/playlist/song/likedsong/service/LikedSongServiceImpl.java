@@ -53,8 +53,7 @@ public class LikedSongServiceImpl implements LikedSongService {
 
     @Override
     public SongResponse findALikedSong(Long userEntityId, String songTitle) {
-        LikedSong likedSong = likedSongRepository.findLikedSongBySong_TitleAndUserEntity_Id(songTitle, userEntityId)
-                .orElseThrow(()->new SongNotFoundException("Liked song could not be found"));
+        LikedSong likedSong = getLikedSong(userEntityId, songTitle);
         Song song = likedSong.getSong();
         return mapper.map(song, SongResponse.class);
     }
@@ -71,5 +70,22 @@ public class LikedSongServiceImpl implements LikedSongService {
                 .map(likedSong->mapper.map(likedSong.getSong(), SongResponse.class))
                 .collect(Collectors.toList());
         return new PageImpl<>(songResponses, pageable, likedSongs.size());
+    }
+
+    @Override
+    public ApiResponse dislikeSong(Long userEntityId, String songTitle) {
+        LikedSong likedSong = getLikedSong(userEntityId, songTitle);
+        likedSong.setLiked(false);
+        likedSong.setDislike(true);  //I feel this is not necessary but just in case
+        likedSongRepository.delete(likedSong);
+
+        return ApiResponse.builder()
+                .status(HttpStatus.OK)
+                .message("Song disliked successfully")
+                .build();
+    }
+    private LikedSong getLikedSong(Long userEntityId, String songTitle) {
+        return likedSongRepository.findLikedSongBySong_TitleAndUserEntity_Id(songTitle, userEntityId)
+                .orElseThrow(()->new SongNotFoundException("Liked song could not be found"));
     }
 }

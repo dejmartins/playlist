@@ -9,4 +9,5 @@ public interface LikedSongService {
    ApiResponse likeSong(Long userEntityId, String songTitle);
    SongResponse findALikedSong(Long userEntityId, String songTitle);
    Page<SongResponse> findAllLikedSongsByUser(Long userEntityId, String songTitle, int pageNumber);
+   ApiResponse dislikeSong(Long userEntityId, String songTitle);
 }
