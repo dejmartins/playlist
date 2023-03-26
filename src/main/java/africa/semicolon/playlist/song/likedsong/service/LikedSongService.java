@@ -1,6 +1,6 @@
 package africa.semicolon.playlist.song.likedsong.service;
 
-import africa.semicolon.playlist.song.dto.LikeSongResponse;
+import africa.semicolon.playlist.song.dto.response.LikeSongResponse;
 
 public interface LikedSongService{
 

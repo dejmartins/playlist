@@ -1,7 +1,7 @@
 package africa.semicolon.playlist.config.spotify;
 
 
-import africa.semicolon.playlist.song.demoSong.Song;
+import africa.semicolon.playlist.song.demoSong.model.Song;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

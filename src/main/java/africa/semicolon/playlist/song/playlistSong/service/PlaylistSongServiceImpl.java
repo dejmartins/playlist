@@ -6,7 +6,7 @@ import africa.semicolon.playlist.exception.PlaylistSongNotFoundException;
 import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.song.playlistSong.demo.PlaylistSongEntity;
 import africa.semicolon.playlist.song.playlistSong.repository.PlaylistSongRepository;
-import africa.semicolon.playlist.song.demoSong.Song;
+import africa.semicolon.playlist.song.demoSong.model.Song;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

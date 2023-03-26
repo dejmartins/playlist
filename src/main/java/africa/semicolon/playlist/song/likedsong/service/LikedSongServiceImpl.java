@@ -1,8 +1,7 @@
 package africa.semicolon.playlist.song.likedsong.service;
 
-import africa.semicolon.playlist.song.dto.LikeSongResponse;
+import africa.semicolon.playlist.song.dto.response.LikeSongResponse;
 import africa.semicolon.playlist.song.likedsong.repository.LikedSongRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
