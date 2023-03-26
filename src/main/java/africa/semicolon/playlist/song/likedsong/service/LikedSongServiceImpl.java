@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static africa.semicolon.playlist.config.utilities.PlaylistUtilities.*;
+
 @Service
 @RequiredArgsConstructor
 public class LikedSongServiceImpl implements LikedSongService {
@@ -44,10 +46,11 @@ public class LikedSongServiceImpl implements LikedSongService {
                 .dislike(false)
                 .build();
 
-        LikedSong savedLikedSong = likedSongRepository.save(likedSong);
+        likedSongRepository.save(likedSong);
+
         return ApiResponse.builder()
                 .status(HttpStatus.OK)
-                .message("Song liked successfully")
+                .message(SONG_LIKED)
                 .build();
     }
 
@@ -65,7 +68,9 @@ public class LikedSongServiceImpl implements LikedSongService {
 
         Pageable pageable = PageRequest.of(pageNumber, MAX_PAGE_NUMBER);
 
-        List<LikedSong> likedSongs = likedSongRepository.findLikedSongByUserEntity_IdAndSong_Title(userEntityId, songTitle);
+        List<LikedSong> likedSongs = likedSongRepository
+                .findLikedSongByUserEntity_IdAndSong_Title(userEntityId, songTitle);
+
         List<SongResponse> songResponses = likedSongs.stream()
                 .map(likedSong->mapper.map(likedSong.getSong(), SongResponse.class))
                 .collect(Collectors.toList());
@@ -81,11 +86,11 @@ public class LikedSongServiceImpl implements LikedSongService {
 
         return ApiResponse.builder()
                 .status(HttpStatus.OK)
-                .message("Song disliked successfully")
+                .message(SONG_DISLIKED)
                 .build();
     }
     private LikedSong getLikedSong(Long userEntityId, String songTitle) {
         return likedSongRepository.findLikedSongBySong_TitleAndUserEntity_Id(songTitle, userEntityId)
-                .orElseThrow(()->new SongNotFoundException("Liked song could not be found"));
+                .orElseThrow(()->new SongNotFoundException(SONG_NOT_FOUND));
     }
 }

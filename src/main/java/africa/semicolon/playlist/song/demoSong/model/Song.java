@@ -10,6 +10,8 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.Date;
 
+import static africa.semicolon.playlist.config.utilities.PlaylistUtilities.PATTERN;
+
 @Entity
 @Setter
 @Getter
@@ -26,7 +28,7 @@ public class Song {
     private String artiste;
     private String image;
     private boolean explicit;
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = PATTERN)
     private Date releaseDate;
     private String albumName;
     private String duration;

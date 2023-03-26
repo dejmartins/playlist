@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import static africa.semicolon.playlist.config.utilities.PlaylistUtilities.SONG_NOT_FOUND;
+
 @Service
 @AllArgsConstructor
 public class SongServiceImpl implements SongService {
@@ -20,7 +22,7 @@ public class SongServiceImpl implements SongService {
     @Override
     public SongResponse getSongByTitle(String songTitle) {
         Song song = songRepository.findSongByTitle(songTitle)
-                .orElseThrow(()->new SongNotFoundException("Song could not be found"));
+                .orElseThrow(()->new SongNotFoundException(SONG_NOT_FOUND));
 
         return mapper.map(song, SongResponse.class);
     }
@@ -28,7 +30,7 @@ public class SongServiceImpl implements SongService {
     @Override
     public Song getSongBySongTitle(String songTitle) {
         return songRepository.findSongByTitle(songTitle)
-                .orElseThrow(()-> new SongNotFoundException("Song could not be found"));
+                .orElseThrow(()-> new SongNotFoundException(SONG_NOT_FOUND));
     }
 
     @Override
@@ -44,7 +46,7 @@ public class SongServiceImpl implements SongService {
         } else {
             Song song = getSongFromSpotify(songTitle);
             if (song == null) {
-                throw new SongNotFoundException("Song could not be found");
+                throw new SongNotFoundException(SONG_NOT_FOUND);
             }
             Song savedSong = songRepository.save(song);
             return mapper.map(savedSong, SongResponse.class);
