@@ -1,4 +1,4 @@
-package africa.semicolon.playlist.user.dto.response.request;
+package africa.semicolon.playlist.user.dto.response;
 
 import lombok.*;
 

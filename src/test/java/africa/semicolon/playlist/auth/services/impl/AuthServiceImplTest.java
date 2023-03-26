@@ -7,7 +7,7 @@ import africa.semicolon.playlist.auth.security.JwtGenerator;
 import africa.semicolon.playlist.auth.services.AuthService;
 import africa.semicolon.playlist.exception.userExceptions.InvalidLoginDetailsException;
 import africa.semicolon.playlist.exception.userExceptions.UserAlreadyExistsException;
-import africa.semicolon.playlist.user.data.models.User;
+import africa.semicolon.playlist.user.data.models.UserEntity;
 import africa.semicolon.playlist.user.data.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -89,7 +89,7 @@ class AuthServiceImplTest {
                 .password("password")
                 .build();
 
-        var savedUser = User.builder()
+        var savedUser = UserEntity.builder()
                 .id(1L)
                 .firstName(requestDto.getFirstName())
                 .lastName(requestDto.getLastName())

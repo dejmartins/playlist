@@ -1,4 +1,4 @@
-package africa.semicolon.playlist.spotify;
+package africa.semicolon.playlist.config.spotify;
 
 import africa.semicolon.playlist.song.demoSong.Song;
 import com.fasterxml.jackson.core.JsonProcessingException;

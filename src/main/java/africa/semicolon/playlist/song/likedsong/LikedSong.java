@@ -6,15 +6,14 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Setter
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class LikedSong {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long songId;
+    private Long likedSongId;
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Song song;
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
