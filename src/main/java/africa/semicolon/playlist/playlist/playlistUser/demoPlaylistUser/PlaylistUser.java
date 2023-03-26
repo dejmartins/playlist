@@ -1,7 +1,7 @@
-package africa.semicolon.playlist.playlistSong.demo;
+package africa.semicolon.playlist.playlist.playlistUser.demoPlaylistUser;
 
 import africa.semicolon.playlist.playlist.demo.PlayList;
-import africa.semicolon.playlist.song.demoSong.Song;
+import africa.semicolon.playlist.user.data.models.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,18 +9,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Data
 @Builder
+@Table
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlaylistSongEntity {
+public class PlaylistUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    private PlayList playList;
+    private UserEntity user;
     @ManyToOne
-    private Song song;
+    private PlayList playList;
 
 }

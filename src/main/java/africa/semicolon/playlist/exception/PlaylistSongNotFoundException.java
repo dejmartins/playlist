@@ -1,8 +1,9 @@
-package africa.semicolon.playlist.exceptions;
+package africa.semicolon.playlist.exception;
 
+import africa.semicolon.playlist.exception.PlaylistException;
 import org.springframework.http.HttpStatus;
 
-public class PlaylistSongNotFoundException extends BusinessLogicException {
+public class PlaylistSongNotFoundException extends PlaylistException {
 
     public PlaylistSongNotFoundException() {
         this("Playlist_Song not found!");

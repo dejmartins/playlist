@@ -1,10 +1,11 @@
-package africa.semicolon.playlist.playlistSong.service;
+package africa.semicolon.playlist.song.playlistSong.service;
 
 import africa.semicolon.playlist.ApiResponse;
-import africa.semicolon.playlist.exceptions.PlaylistNotFoundException;
+import africa.semicolon.playlist.exception.PlaylistNotFoundException;
+import africa.semicolon.playlist.exception.PlaylistSongNotFoundException;
 import africa.semicolon.playlist.playlist.demo.PlayList;
-import africa.semicolon.playlist.playlistSong.demo.PlaylistSongEntity;
-import africa.semicolon.playlist.playlistSong.repository.PlaylistSongRepository;
+import africa.semicolon.playlist.song.playlistSong.demo.PlaylistSongEntity;
+import africa.semicolon.playlist.song.playlistSong.repository.PlaylistSongRepository;
 import africa.semicolon.playlist.song.demoSong.Song;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -62,5 +63,14 @@ public class PlaylistSongServiceImpl implements PlaylistSongService {
                 .build();
     }
 
+    @Override
+    public Set<Song> getSongsInPlaylist(PlayList playList) {
+        List<PlaylistSongEntity> playlistSongEntity = playlistSongRepository.findByPlayList(playList).orElseThrow(PlaylistSongNotFoundException::new);
+        Set<Song> songsInPlaylist = new HashSet<>();
+        for (PlaylistSongEntity aPlaylistSongEntity : playlistSongEntity) {
+            songsInPlaylist.add(aPlaylistSongEntity.getSong());
+        }
+        return songsInPlaylist;
+    }
 
 }

@@ -1,12 +1,13 @@
-package africa.semicolon.playlist.playlistSong.repository;
+package africa.semicolon.playlist.song.playlistSong.repository;
 
 
 import africa.semicolon.playlist.playlist.demo.PlayList;
-import africa.semicolon.playlist.playlistSong.demo.PlaylistSongEntity;
+import africa.semicolon.playlist.song.playlistSong.demo.PlaylistSongEntity;
 import africa.semicolon.playlist.song.demoSong.Song;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -15,6 +16,7 @@ public interface PlaylistSongRepository extends JpaRepository<PlaylistSongEntity
 
     Optional<PlaylistSongEntity> findByPlayListAndSong(PlayList playList, Song song);
 
+    Optional<List<PlaylistSongEntity>> findByPlayList(PlayList playList);
 
 
 }

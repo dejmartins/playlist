@@ -5,6 +5,7 @@ import africa.semicolon.playlist.playlist.dto.CreatePlaylistReq;
 import africa.semicolon.playlist.playlist.dto.CreatePlaylistResponse;
 import africa.semicolon.playlist.playlist.dto.FindPlaylistResponse;
 import africa.semicolon.playlist.playlist.dto.UploadPlaylistImageResponse;
+import com.github.fge.jsonpatch.JsonPatch;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface PlaylistService {
@@ -21,6 +22,6 @@ public interface PlaylistService {
 
     ApiResponse deletePlaylistById(Long playlistId);
 
-//    FindPlaylistResponse updatePlaylistDetails(JSONPatch jsonPatch);
+    FindPlaylistResponse updatePlaylistDetails(JsonPatch jsonPatch);
 
 }

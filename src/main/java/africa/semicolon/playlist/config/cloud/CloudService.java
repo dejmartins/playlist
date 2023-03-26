@@ -1,4 +1,4 @@
-package africa.semicolon.playlist.cloud;
+package africa.semicolon.playlist.config.cloud;
 
 import org.springframework.web.multipart.MultipartFile;
 
