@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class ResolveAccountRequest {
 
+    private String emailAddress;
     private String accountNumber;
     private String bankCode;
 }
