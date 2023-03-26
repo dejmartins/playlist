@@ -20,30 +20,37 @@ public class SongServiceImpl implements SongService {
     @Override
     public SongResponse getSongByTitle(String songTitle) {
         Song song = songRepository.findSongByTitle(songTitle)
-                .orElseThrow(()-> new SongNotFoundException("Song could not be found"));
+                .orElseThrow(()->new SongNotFoundException("Song could not be found"));
 
         return mapper.map(song, SongResponse.class);
+    }
+
+    @Override
+    public Song getSongBySongTitle(String songTitle) {
+        return songRepository.findSongByTitle(songTitle)
+                .orElseThrow(()-> new SongNotFoundException("Song could not be found"));
     }
 
     @Override
     public void saveSong(Song song) {
         songRepository.save(song);
     }
+
     @Override
     public SongResponse searchSong(String songTitle) {
-        SongResponse response;
-        response = getSongByTitle(songTitle);
+        SongResponse response = getSongByTitle(songTitle);
         if (response != null) {
-           return response;
+            return response;
         } else {
-             Song song = getSongFromSpotify(songTitle);
-             if (song == null) {
-                 throw new SongNotFoundException("Song could not be found");
-             }
+            Song song = getSongFromSpotify(songTitle);
+            if (song == null) {
+                throw new SongNotFoundException("Song could not be found");
+            }
             Song savedSong = songRepository.save(song);
             return mapper.map(savedSong, SongResponse.class);
         }
     }
+
     private Song getSongFromSpotify(String songTitle) {
         try {
             return spotifyService.findingSong(songTitle);

@@ -1,8 +1,9 @@
 package africa.semicolon.playlist.song.likedsong.service;
 
-import africa.semicolon.playlist.song.dto.response.LikeSongResponse;
+import africa.semicolon.playlist.ApiResponse;
+import africa.semicolon.playlist.song.likedsong.dto.response.LikeSongResponse;
 
-public interface LikedSongService{
+public interface LikedSongService {
 
-    LikeSongResponse likeSong(Long songId, Long userId);
+   ApiResponse likeSong(Long userEntityId, String songTitle);
 }

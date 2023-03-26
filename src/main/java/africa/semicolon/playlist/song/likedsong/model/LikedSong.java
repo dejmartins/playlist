@@ -1,4 +1,4 @@
-package africa.semicolon.playlist.song.likedsong;
+package africa.semicolon.playlist.song.likedsong.model;
 
 import africa.semicolon.playlist.song.demoSong.model.Song;
 import africa.semicolon.playlist.user.data.models.UserEntity;
