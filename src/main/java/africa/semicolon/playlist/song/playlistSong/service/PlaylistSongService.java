@@ -3,8 +3,6 @@ package africa.semicolon.playlist.song.playlistSong.service;
 import africa.semicolon.playlist.ApiResponse;
 import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.song.demoSong.Song;
-import africa.semicolon.playlist.song.playlistSong.demo.PlaylistSongEntity;
-
 import java.util.List;
 import java.util.Set;
 

@@ -7,11 +7,17 @@ import java.util.Set;
 
 public interface PlaylistUserService {
 
-    ApiResponse addPlaylistToUser(UserEntity userEntity, PlayList playList);
+    ApiResponse addPlaylistToUser(PlayList playList);
 
     ApiResponse removePlaylistFromUser(UserEntity userEntity, PlayList playList);
 
     Set<PlayList> getPlaylistForUser(UserEntity userEntity);
 
     Set<UserEntity> getPlaylistUsers(PlayList playList);
+
+    ApiResponse addPlaylistToUser(Long playlistId);
+
+    ApiResponse removePlaylistFromUser(Long playlistId);
+
+    Set<UserEntity> getPlaylistUsers(Long playlistId);
 }

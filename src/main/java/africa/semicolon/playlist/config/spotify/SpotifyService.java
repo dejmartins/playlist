@@ -24,7 +24,7 @@ import java.util.Properties;
 @Service
 public class SpotifyService {
 
-    public Song findingSong(String songName) throws JsonProcessingException {
+    public Song findingSong(String songTitle) throws JsonProcessingException {
         String path = "C:\\Users\\user\\IdeaProjects\\playlist\\src\\main\\resources\\secret.properties";
         FileInputStream fileInput;
         try {
@@ -66,7 +66,7 @@ public class SpotifyService {
 //        String accessToken = "BQAQe9D2bGb0nN9bLmuUoyVZzkaF8d37vgYIKUUJDprxvvAt0n13CHBnI5OhIkU-9pW3uyHn7_7Qz7UQv1UWD6dinoL4ImMPCQeRVjIWTOAei5a6ez87";
         headers.set("Authorization", "Bearer " + accessToken);
 
-        String url = "https://api.spotify.com/v1/search?q=" + songName + "&type=track";
+        String url = "https://api.spotify.com/v1/search?q=" + songTitle + "&type=track";
 
         HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 
