@@ -29,16 +29,6 @@ public class SongServiceImpl implements SongService {
     public void saveSong(Song song) {
         songRepository.save(song);
     }
-
-    @Override
-    public Song getSongFromSpotify(String songTitle) {
-        try {
-            return spotifyService.findingSong(songTitle);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Override
     public SongResponse searchSong(String songTitle) {
         SongResponse response;
@@ -52,6 +42,13 @@ public class SongServiceImpl implements SongService {
              }
             Song savedSong = songRepository.save(song);
             return mapper.map(savedSong, SongResponse.class);
+        }
+    }
+    private Song getSongFromSpotify(String songTitle) {
+        try {
+            return spotifyService.findingSong(songTitle);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
     }
 }
