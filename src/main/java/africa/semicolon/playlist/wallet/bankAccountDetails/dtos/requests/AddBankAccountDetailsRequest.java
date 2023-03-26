@@ -7,8 +7,11 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResolveAccountRequest {
+public class AddBankAccountDetailsRequest {
 
-    private String accountNumber;
+    private String bankName;
     private String bankCode;
+    private String accountName;
+    private String emailAddress;
+    private String accountNumber;
 }

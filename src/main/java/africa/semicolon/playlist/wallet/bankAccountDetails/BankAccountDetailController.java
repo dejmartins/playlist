@@ -1,14 +1,14 @@
 package africa.semicolon.playlist.wallet.bankAccountDetails;
 
+import africa.semicolon.playlist.wallet.bankAccountDetails.dtos.requests.AddBankAccountDetailsRequest;
+import africa.semicolon.playlist.wallet.bankAccountDetails.dtos.requests.DeleteBankAccountDetailsRequest;
 import africa.semicolon.playlist.wallet.bankAccountDetails.dtos.requests.ResolveAccountRequest;
+import africa.semicolon.playlist.wallet.bankAccountDetails.dtos.responses.BankAccountDetailsResponse;
 import africa.semicolon.playlist.wallet.bankAccountDetails.dtos.responses.ResolveAccountResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -28,6 +28,28 @@ public class BankAccountDetailController {
                 .build();
 
         return new ResponseEntity<>(resolveAccountResponse, HttpStatus.ACCEPTED);
+    }
+
+    @PostMapping("/addBankAccountDetails")
+    public ResponseEntity<BankAccountDetailsResponse> addBankAccountDetails(
+            @RequestBody AddBankAccountDetailsRequest addBankAccountDetailsRequest
+            ){
+
+        BankAccountDetailsResponse addBankAccountDetailsResponse =
+                bankAccountDetailService.saveBankAccountDetails(addBankAccountDetailsRequest);
+
+        return new ResponseEntity<>(addBankAccountDetailsResponse, HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping("/deleteAccountDetails")
+    public ResponseEntity<BankAccountDetailsResponse> deleteBankAccountDetails(
+            @RequestBody DeleteBankAccountDetailsRequest deleteBankAccountDetailsRequest
+    ){
+
+        BankAccountDetailsResponse bankAccountDetailsResponse =
+                bankAccountDetailService.deleteBankAccountDetail(deleteBankAccountDetailsRequest);
+
+        return new ResponseEntity<>(bankAccountDetailsResponse, HttpStatus.ACCEPTED);
     }
 
 }

@@ -18,7 +18,7 @@ public class WalletServiceImpl implements WalletService{
 
     @Override
     public void deposit(DepositRequest depositRequest) {
-        Optional<User> user = userRepository.findByEmailAddress(depositRequest.getEmailAddress());
+        Optional<User> user = userRepository.findUserByEmailAddress(depositRequest.getEmailAddress());
 
         if(user.isPresent()){
             addToUserBalance(depositRequest.getAmount(), user.get());
