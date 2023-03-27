@@ -1,6 +1,6 @@
 package africa.semicolon.playlist.user.models;
 
-import africa.semicolon.playlist.wallet.Wallet;
+import africa.semicolon.playlist.wallet.model.Wallet;
 import africa.semicolon.playlist.wallet.bankAccountDetails.BankAccountDetail;
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,6 +1,5 @@
-package africa.semicolon.playlist.wallet;
+package africa.semicolon.playlist.wallet.model;
 
-import africa.semicolon.playlist.user.models.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,7 +18,7 @@ public class Wallet {
     private Long id;
     private BigDecimal balance;
 
-    public void deposit(BigDecimal amount){
+    public void increaseBalance(BigDecimal amount){
         balance = balance.add(amount);
     }
 }

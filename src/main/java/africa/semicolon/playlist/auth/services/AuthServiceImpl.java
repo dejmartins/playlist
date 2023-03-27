@@ -8,8 +8,8 @@ import africa.semicolon.playlist.exception.userExceptions.UserAlreadyExistsExcep
 import africa.semicolon.playlist.auth.security.JwtGenerator;
 import africa.semicolon.playlist.user.models.User;
 import africa.semicolon.playlist.user.repositories.UserRepository;
-import africa.semicolon.playlist.wallet.Wallet;
-import africa.semicolon.playlist.wallet.WalletRepository;
+import africa.semicolon.playlist.wallet.model.Wallet;
+import africa.semicolon.playlist.wallet.repositories.WalletRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;

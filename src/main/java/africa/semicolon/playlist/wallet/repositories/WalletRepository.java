@@ -1,5 +1,6 @@
-package africa.semicolon.playlist.wallet;
+package africa.semicolon.playlist.wallet.repositories;
 
+import africa.semicolon.playlist.wallet.model.Wallet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
