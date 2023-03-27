@@ -26,7 +26,7 @@ import java.util.Properties;
 public class SpotifyService {
 
     public Song findingSong(String songName) throws JsonProcessingException {
-        String path = "C:\\Users\\user\\IdeaProjects\\playlist\\src\\main\\resources\\secret.properties";
+        String path = "C:\\Users\\user\\IdeaProjects\\playlist\\src\\main\\resources\\secrets.properties";
         FileInputStream fileInput;
         try {
             fileInput = new FileInputStream(path);
