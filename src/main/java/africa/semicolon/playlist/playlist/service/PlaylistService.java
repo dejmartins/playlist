@@ -1,6 +1,7 @@
 package africa.semicolon.playlist.playlist.service;
 
-import africa.semicolon.playlist.ApiResponse;
+import africa.semicolon.playlist.config.ApiResponse;
+import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.playlist.dto.CreatePlaylistReq;
 import africa.semicolon.playlist.playlist.dto.CreatePlaylistResponse;
 import africa.semicolon.playlist.playlist.dto.FindPlaylistResponse;
@@ -22,5 +23,7 @@ public interface PlaylistService {
     ApiResponse deletePlaylistById(Long playlistId);
 
     FindPlaylistResponse updatePlaylistDetails(Long playlistId, JsonPatch updatePayload);
+
+    PlayList privateFindPlaylistById(Long playlistId);
 
 }

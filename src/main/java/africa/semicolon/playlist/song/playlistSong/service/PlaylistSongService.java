@@ -1,6 +1,6 @@
 package africa.semicolon.playlist.song.playlistSong.service;
 
-import africa.semicolon.playlist.ApiResponse;
+import africa.semicolon.playlist.config.ApiResponse;
 import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.song.demoSong.Song;
 import java.util.List;

@@ -1,5 +1,6 @@
 package africa.semicolon.playlist.user.service;
 
+import africa.semicolon.playlist.exception.userExceptions.UserNotFoundException;
 import africa.semicolon.playlist.user.data.models.UserEntity;
 import africa.semicolon.playlist.user.dto.request.RegistrationRequest;
 import africa.semicolon.playlist.user.dto.response.RegistrationResponse;
@@ -24,6 +25,11 @@ public class UserEntityServiceImpl implements UserEntityService {
                 .message("Registration successful")
                 .success(true)
                 .build();
+    }
+
+    @Override
+    public UserEntity privateFindUserById(Long userId) {
+        return userEntityRepository.findById(userId).orElseThrow(UserNotFoundException::new);
     }
 
 }

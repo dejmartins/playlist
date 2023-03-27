@@ -4,44 +4,34 @@ import africa.semicolon.playlist.song.demoSong.Song;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
-import java.util.Properties;
-
 
 @Service
+@AllArgsConstructor
 public class SpotifyService {
 
+
+    @Value("${spotify.client.id}")
+    private String clientId;
+
+    @Value("${spotify.client.secret}")
+    private String clientSecret;
+
+
     public Song findingSong(String songTitle) throws JsonProcessingException {
-        String path = "C:\\Users\\user\\IdeaProjects\\playlist\\src\\main\\resources\\secret.properties";
-        FileInputStream fileInput;
-        try {
-            fileInput = new FileInputStream(path);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        Properties properties = new Properties();
-        try {
-            properties.load(fileInput);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        String clientId = properties.getProperty("client-id");
-        String clientSecret = properties.getProperty("client-secret");
-
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headersOne = new HttpHeaders();
         headersOne.setContentType(MediaType.APPLICATION_FORM_URLENCODED);

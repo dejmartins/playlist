@@ -1,6 +1,6 @@
 package africa.semicolon.playlist.song.playlistSong.service;
 
-import africa.semicolon.playlist.ApiResponse;
+import africa.semicolon.playlist.config.ApiResponse;
 import africa.semicolon.playlist.exception.PlaylistNotFoundException;
 import africa.semicolon.playlist.exception.PlaylistSongNotFoundException;
 import africa.semicolon.playlist.playlist.demo.PlayList;

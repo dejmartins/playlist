@@ -1,8 +1,9 @@
 package africa.semicolon.playlist.playlist.service;
 
-import africa.semicolon.playlist.ApiResponse;
+import africa.semicolon.playlist.config.ApiResponse;
 import africa.semicolon.playlist.config.cloud.CloudService;
 import africa.semicolon.playlist.exception.PlaylistNotFoundException;
+import africa.semicolon.playlist.playlist.Contributor.service.ContributorService;
 import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.playlist.dto.CreatePlaylistReq;
 import africa.semicolon.playlist.playlist.dto.CreatePlaylistResponse;
@@ -17,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.Optional;
+
 
 @Service
 @Slf4j
@@ -26,6 +27,8 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     private final CloudService cloudService;
     private final PlaylistRepository playlistRepository;
+
+    private final ContributorService contributorService;
 
     @Override
     public CreatePlaylistResponse createPlaylist(CreatePlaylistReq createPlaylistRequest) {
@@ -37,6 +40,8 @@ public class PlaylistServiceImpl implements PlaylistService {
                 .build();
 
         PlayList savedPlaylist = playlistRepository.save(playlistRequest);
+        contributorService.addAuthorToPlaylist(savedPlaylist);
+
         return CreatePlaylistResponse.builder()
                 .id(savedPlaylist.getId())
                 .name(savedPlaylist.getName())
@@ -49,10 +54,9 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     public ApiResponse updatePlaylistImage(MultipartFile profileImage, Long playlistId) {
-        Optional<PlayList> foundPlaylist = privateFindPlaylistById(playlistId);
-        if (foundPlaylist.isEmpty()) throw new PlaylistNotFoundException("Playlist with id " + playlistId + " not found");
+        PlayList foundPlaylist = privateFindPlaylistById(playlistId);
         String imageUrl = cloudService.upload(profileImage);
-        foundPlaylist.ifPresent(playList -> updatePlaylistProfileImage(imageUrl, playList));
+        updatePlaylistProfileImage(imageUrl, foundPlaylist);
 
         return ApiResponse
                 .builder()
@@ -134,8 +138,9 @@ public class PlaylistServiceImpl implements PlaylistService {
         }
     }
 
-    private Optional<PlayList> privateFindPlaylistById(Long playlistId) {
-        return playlistRepository.findById(playlistId);
+    @Override
+    public PlayList privateFindPlaylistById(Long playlistId) {
+        return playlistRepository.findById(playlistId).orElseThrow(PlaylistNotFoundException::new);
     }
 
     private void updatePlaylistProfileImage(String url, PlayList playList) {
