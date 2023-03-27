@@ -1,6 +1,5 @@
 package africa.semicolon.playlist.wallet.bankAccountDetails;
 
-import africa.semicolon.playlist.wallet.bankAccountDetails.dtos.responses.BankAccountDetailsResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
