@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface PlaylistService {
 
-    CreatePlaylistResponse createPlaylist(CreatePlaylistReq createPlaylistRequest);
+    PlayList createPlaylist(CreatePlaylistReq createPlaylistRequest);
 
     ApiResponse updatePlaylistImage(MultipartFile profileImage, Long playlist);
 

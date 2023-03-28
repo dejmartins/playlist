@@ -32,4 +32,9 @@ public class UserEntityServiceImpl implements UserEntityService {
         return userEntityRepository.findById(userId).orElseThrow(UserNotFoundException::new);
     }
 
+    @Override
+    public UserEntity privateFindUserByUsername(String username) {
+        return userEntityRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+    }
+
 }

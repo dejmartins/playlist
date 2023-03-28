@@ -4,10 +4,8 @@ import africa.semicolon.playlist.song.demoSong.Song;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -20,7 +18,6 @@ import java.util.Base64;
 import java.util.Date;
 
 @Service
-@AllArgsConstructor
 public class SpotifyService {
 
 

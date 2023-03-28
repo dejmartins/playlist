@@ -3,7 +3,7 @@ package africa.semicolon.playlist.playlist.service;
 import africa.semicolon.playlist.config.ApiResponse;
 import africa.semicolon.playlist.config.cloud.CloudService;
 import africa.semicolon.playlist.exception.PlaylistNotFoundException;
-import africa.semicolon.playlist.playlist.Contributor.service.ContributorService;
+//import africa.semicolon.playlist.playlist.Contributor.service.ContributorService;
 import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.playlist.dto.CreatePlaylistReq;
 import africa.semicolon.playlist.playlist.dto.CreatePlaylistResponse;
@@ -28,10 +28,10 @@ public class PlaylistServiceImpl implements PlaylistService {
     private final CloudService cloudService;
     private final PlaylistRepository playlistRepository;
 
-    private final ContributorService contributorService;
+//    private final ContributorService contributorService;
 
     @Override
-    public CreatePlaylistResponse createPlaylist(CreatePlaylistReq createPlaylistRequest) {
+    public PlayList createPlaylist(CreatePlaylistReq createPlaylistRequest) {
         PlayList playlistRequest = PlayList.builder()
                 .slug(createPlaylistRequest.getSlug())
                 .name(createPlaylistRequest.getName())
@@ -39,17 +39,7 @@ public class PlaylistServiceImpl implements PlaylistService {
                 .isPublic(createPlaylistRequest.getIsPublic())
                 .build();
 
-        PlayList savedPlaylist = playlistRepository.save(playlistRequest);
-        contributorService.addAuthorToPlaylist(savedPlaylist);
-
-        return CreatePlaylistResponse.builder()
-                .id(savedPlaylist.getId())
-                .name(savedPlaylist.getName())
-                .coverImage(savedPlaylist.getCoverImage())
-                .description(savedPlaylist.getDescription())
-                .slug(savedPlaylist.getSlug())
-                .isPublic(savedPlaylist.getIsPublic())
-                .build();
+        return playlistRepository.save(playlistRequest);
     }
 
     @Override

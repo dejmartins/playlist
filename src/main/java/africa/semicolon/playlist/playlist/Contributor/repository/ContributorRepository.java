@@ -10,9 +10,9 @@ import java.util.Optional;
 
 public interface ContributorRepository extends JpaRepository<Contributor, Long> {
 
-    Optional<List<Contributor>> findByUser(UserEntity userEntity);
+    Optional<List<Contributor>> findAllByUser(UserEntity userEntity);
 
-    Optional<List<Contributor>> findByPlayList(PlayList playList);
+    Optional<List<Contributor>> findAllByPlayList(PlayList playList);
 
     Optional<Contributor> findByUserAndPlayList(UserEntity userEntity, PlayList playList);
 

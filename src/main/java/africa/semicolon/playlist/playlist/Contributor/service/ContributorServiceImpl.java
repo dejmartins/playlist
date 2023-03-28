@@ -6,7 +6,9 @@ import africa.semicolon.playlist.exception.PlaylistUserNotFoundException;
 import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.playlist.Contributor.demoContributor.Contributor;
 import africa.semicolon.playlist.playlist.Contributor.repository.ContributorRepository;
-//import africa.semicolon.playlist.playlist.service.PlaylistService;
+import africa.semicolon.playlist.playlist.dto.CreatePlaylistReq;
+import africa.semicolon.playlist.playlist.dto.CreatePlaylistResponse;
+import africa.semicolon.playlist.playlist.service.PlaylistService;
 import africa.semicolon.playlist.user.data.models.UserEntity;
 import africa.semicolon.playlist.user.service.UserEntityService;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +25,13 @@ public class ContributorServiceImpl implements ContributorService {
 
     private final ContributorRepository pluRepository;
     private final AuthService authService;
-//    private final PlaylistService playlistService;
+    private final PlaylistService playlistService;
     private final UserEntityService userEntityService;
 
 
     @Override
-    public ApiResponse addUserToPlaylist(Long userId, PlayList playList) {
-        UserEntity userEntity = userEntityService.privateFindUserById(userId);
+    public ApiResponse addContributorToPlaylist(String username, PlayList playList) {
+        UserEntity userEntity = userEntityService.privateFindUserByUsername(username);
         Contributor newContributor = Contributor.builder()
                 .user(userEntity)
                 .playList(playList)
@@ -43,8 +45,8 @@ public class ContributorServiceImpl implements ContributorService {
     }
 
     @Override
-    public ApiResponse removeUserFromPlaylist(PlayList playList) {
-        UserEntity userEntity = authService.getCurrentUser();
+    public ApiResponse removeContributor(String username, PlayList playList) {
+        UserEntity userEntity = userEntityService.privateFindUserByUsername(username);
         Contributor foundContributor = pluRepository.findByUserAndPlayList(userEntity, playList).orElseThrow(PlaylistUserNotFoundException::new);
         pluRepository.delete(foundContributor);
         return ApiResponse.builder()
@@ -54,9 +56,9 @@ public class ContributorServiceImpl implements ContributorService {
     }
 
     @Override
-    public Set<PlayList> getContributors() {
+    public Set<PlayList> getPlaylistForUser() {
         UserEntity userEntity = authService.getCurrentUser();
-        List<Contributor> foundContributor = pluRepository.findByUser(userEntity).orElseThrow(PlaylistUserNotFoundException::new);
+        List<Contributor> foundContributor = pluRepository.findAllByUser(userEntity).orElseThrow(PlaylistUserNotFoundException::new);
         Set<PlayList> userPlaylists = new HashSet<>();
         for (Contributor contributor : foundContributor) {
             userPlaylists.add(contributor.getPlayList());
@@ -65,8 +67,8 @@ public class ContributorServiceImpl implements ContributorService {
     }
 
     @Override
-    public Set<UserEntity> getPlaylistUsers(PlayList playList) {
-        List<Contributor> foundContributor = pluRepository.findByPlayList(playList).orElseThrow(PlaylistUserNotFoundException::new);
+    public Set<UserEntity> getPlaylistContributors(PlayList playList) {
+        List<Contributor> foundContributor = pluRepository.findAllByPlayList(playList).orElseThrow(PlaylistUserNotFoundException::new);
         Set<UserEntity> users = new HashSet<>();
         for (Contributor contributor : foundContributor) {
             users.add(contributor.getUser());
@@ -75,29 +77,43 @@ public class ContributorServiceImpl implements ContributorService {
     }
 
     @Override
-    public ApiResponse addUserToPlaylist(Long userId, Long playlistId) {
-//        PlayList foundPlaylist = playlistService.privateFindPlaylistById(playlistId);
-        PlayList playlist = PlayList.builder().id(playlistId).build();
-        return addUserToPlaylist(userId, playlist);
+    public ApiResponse addContributorToPlaylist(String username, Long playlistId) {
+        PlayList foundPlaylist = playlistService.privateFindPlaylistById(playlistId);
+//        PlayList playlist = PlayList.builder().id(playlistId).build();
+        return addContributorToPlaylist(username, foundPlaylist);
     }
 
     @Override
-    public ApiResponse removeUserFromPlaylist(Long playlistId) {
-//        PlayList foundPlaylist = playlistService.privateFindPlaylistById(playlistId);
-        PlayList playlist = PlayList.builder().id(playlistId).build();
-        return removeUserFromPlaylist(playlist);
+    public ApiResponse removeContributor(String userName, Long playlistId) {
+        PlayList foundPlaylist = playlistService.privateFindPlaylistById(playlistId);
+//        PlayList playlist = PlayList.builder().id(playlistId).build();
+        return removeContributor(userName, foundPlaylist);
     }
 
     @Override
-    public Set<UserEntity> getPlaylistUsers(Long playlistId) {
-//        PlayList foundPlaylist = playlistService.privateFindPlaylistById(playlistId);
-        PlayList playlist = PlayList.builder().id(playlistId).build();
-        return getPlaylistUsers(playlist);
+    public Set<UserEntity> getPlaylistContributors(Long playlistId) {
+        PlayList foundPlaylist = playlistService.privateFindPlaylistById(playlistId);
+//        PlayList playlist = PlayList.builder().id(playlistId).build();
+        return getPlaylistContributors(foundPlaylist);
     }
 
     @Override
-    public void addAuthorToPlaylist(PlayList playList) {
+    public CreatePlaylistResponse createPlaylist(CreatePlaylistReq createPlaylistReq) {
         UserEntity userEntity = authService.getCurrentUser();
+        PlayList savedPlaylist = playlistService.createPlaylist(createPlaylistReq);
+        addAuthorToPlaylist(userEntity, savedPlaylist);
+        return CreatePlaylistResponse.builder()
+                .id(savedPlaylist.getId())
+                .name(savedPlaylist.getName())
+                .coverImage(savedPlaylist.getCoverImage())
+                .description(savedPlaylist.getDescription())
+                .slug(savedPlaylist.getSlug())
+                .isPublic(savedPlaylist.getIsPublic())
+                .build();
+    }
+
+    @Override
+    public void addAuthorToPlaylist(UserEntity userEntity, PlayList playList) {
         Contributor newContributor = Contributor.builder()
                 .user(userEntity)
                 .playList(playList)

@@ -8,4 +8,6 @@ public interface UserEntityService {
     RegistrationResponse registerUser(RegistrationRequest request);
 
     UserEntity privateFindUserById(Long userId);
+
+    UserEntity privateFindUserByUsername(String username);
 }
