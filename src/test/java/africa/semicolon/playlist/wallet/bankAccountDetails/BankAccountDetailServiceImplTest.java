@@ -24,7 +24,6 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 class BankAccountDetailServiceImplTest {
 
     @Autowired
