@@ -2,6 +2,7 @@ package africa.semicolon.playlist.wallet.services;
 
 import africa.semicolon.playlist.config.paystack.PaystackConfiguration;
 import africa.semicolon.playlist.exception.bankAccountDetailsExceptions.BankAccountDetailsNotFound;
+import africa.semicolon.playlist.exception.bankAccountDetailsExceptions.InsufficientBalanceException;
 import africa.semicolon.playlist.wallet.bankAccountDetails.BankAccountDetail;
 import africa.semicolon.playlist.wallet.bankAccountDetails.BankAccountDetailRepository;
 import africa.semicolon.playlist.wallet.dtos.requests.InitiateTransferRequest;
@@ -16,6 +17,7 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,6 +38,10 @@ public class WalletServiceImpl implements WalletService {
             throw new BankAccountDetailsNotFound();
         }
 
+        if(insufficientFunds(bankAccountDetail.get(), withdrawRequest.getAmount())){
+            throw new InsufficientBalanceException();
+        }
+
         String recipient = createTransferRecipient(bankAccountDetail.get());
         String transferReference = generateTransferReference();
 
@@ -50,6 +56,11 @@ public class WalletServiceImpl implements WalletService {
                 .status(initiateTransfer(initiateTransferRequest))
                 .build();
     }
+
+    private boolean insufficientFunds(BankAccountDetail bankAccountDetail, BigDecimal amount) {
+        return amount.compareTo(bankAccountDetail.getUser().getWallet().getBalance()) > 0;
+    }
+
 
     private String initiateTransfer(InitiateTransferRequest initiateTransferRequest) throws IOException {
         OkHttpClient client = new OkHttpClient();

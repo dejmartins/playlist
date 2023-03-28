@@ -82,6 +82,7 @@ public class BankAccountDetailServiceImpl implements BankAccountDetailService{
     private void addNewBankAccountDetailsToUserList(BankAccountDetail savedBankAccountDetail, String emailAddress) {
         Optional<User> foundUser = userRepository.findUserByEmailAddress(emailAddress);
         foundUser.ifPresent(user -> user.addBankAccountDetails(savedBankAccountDetail));
+        userRepository.save(foundUser.get());
     }
 
     @Override
@@ -104,5 +105,6 @@ public class BankAccountDetailServiceImpl implements BankAccountDetailService{
     private void removeBankAccountDetailsFromUserList(String emailAddress, BankAccountDetail bankAccountDetail) {
         Optional<User> foundUser = userRepository.findUserByEmailAddress(emailAddress);
         foundUser.ifPresent(user -> user.removeBankAccountDetails(bankAccountDetail));
+        userRepository.save(foundUser.get());
     }
 }

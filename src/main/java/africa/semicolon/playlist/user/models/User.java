@@ -35,9 +35,11 @@ public class User {
 
     public void addBankAccountDetails(BankAccountDetail bankAccountDetail){
         bankAccountDetails.add(bankAccountDetail);
+        bankAccountDetail.setUser(this);
     }
 
     public void removeBankAccountDetails(BankAccountDetail bankAccountDetail){
         if(bankAccountDetails != null) bankAccountDetails.remove(bankAccountDetail);
+        bankAccountDetail.setUser(null);
     }
 }
