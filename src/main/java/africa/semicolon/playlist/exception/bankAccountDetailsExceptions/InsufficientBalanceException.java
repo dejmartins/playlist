@@ -10,6 +10,6 @@ public class InsufficientBalanceException extends PlaylistException {
     }
 
     public InsufficientBalanceException(String message) {
-        super(message, HttpStatus.NOT_FOUND);
+        super(message, HttpStatus.CONFLICT);
     }
 }

@@ -54,7 +54,7 @@ public class BankAccountDetailServiceImpl implements BankAccountDetailService{
     }
 
     @Override
-    public BankAccountDetailsResponse saveBankAccountDetails(
+    public BankAccountDetailsResponse addBankAccountDetails(
             AddBankAccountDetailsRequest addBankAccountDetailsRequest) {
 
         Optional<BankAccountDetail> foundBankAccountDetails =
@@ -66,6 +66,14 @@ public class BankAccountDetailServiceImpl implements BankAccountDetailService{
             throw new BankAccountDetailsAlreadyExistsException();
         }
 
+        BankAccountDetail savedBankAccountDetails = createAndSaveBankAccountDetails(addBankAccountDetailsRequest);
+
+        addNewBankAccountDetailsToUserList(savedBankAccountDetails, addBankAccountDetailsRequest.getEmailAddress());
+
+        return BankAccountDetailsResponse.builder().isSuccessful(true).build();
+    }
+
+    private BankAccountDetail createAndSaveBankAccountDetails(AddBankAccountDetailsRequest addBankAccountDetailsRequest) {
         BankAccountDetail bankAccountDetail = BankAccountDetail.builder()
                 .bankCode(addBankAccountDetailsRequest.getBankCode())
                 .bankName(addBankAccountDetailsRequest.getBankName())
@@ -73,16 +81,13 @@ public class BankAccountDetailServiceImpl implements BankAccountDetailService{
                 .accountNumber(addBankAccountDetailsRequest.getAccountNumber())
                 .build();
 
-        BankAccountDetail savedBankAccountDetails = bankAccountDetailRepository.save(bankAccountDetail);
-        addNewBankAccountDetailsToUserList(savedBankAccountDetails, addBankAccountDetailsRequest.getEmailAddress());
-
-        return BankAccountDetailsResponse.builder().isSuccessful(true).build();
+        return bankAccountDetailRepository.save(bankAccountDetail);
     }
 
     private void addNewBankAccountDetailsToUserList(BankAccountDetail savedBankAccountDetail, String emailAddress) {
         Optional<User> foundUser = userRepository.findUserByEmailAddress(emailAddress);
         foundUser.ifPresent(user -> user.addBankAccountDetails(savedBankAccountDetail));
-        userRepository.save(foundUser.get());
+        foundUser.ifPresent(userRepository::save);
     }
 
     @Override

@@ -11,6 +11,6 @@ import java.io.IOException;
 public interface BankAccountDetailService {
 
     ResolveAccountResponse resolveAccount(ResolveAccountRequest resolveAccountRequest) throws IOException;
-    BankAccountDetailsResponse saveBankAccountDetails(AddBankAccountDetailsRequest addBankAccountDetailsRequest);
+    BankAccountDetailsResponse addBankAccountDetails(AddBankAccountDetailsRequest addBankAccountDetailsRequest);
     BankAccountDetailsResponse deleteBankAccountDetail(DeleteBankAccountDetailsRequest deleteBankAccountDetailsRequest);
 }

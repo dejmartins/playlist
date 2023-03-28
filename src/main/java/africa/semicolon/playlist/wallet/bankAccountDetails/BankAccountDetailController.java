@@ -36,7 +36,7 @@ public class BankAccountDetailController {
             ){
 
         BankAccountDetailsResponse addBankAccountDetailsResponse =
-                bankAccountDetailService.saveBankAccountDetails(addBankAccountDetailsRequest);
+                bankAccountDetailService.addBankAccountDetails(addBankAccountDetailsRequest);
 
         return new ResponseEntity<>(addBankAccountDetailsResponse, HttpStatus.ACCEPTED);
     }
