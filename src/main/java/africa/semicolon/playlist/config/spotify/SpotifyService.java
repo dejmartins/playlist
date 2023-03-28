@@ -1,6 +1,6 @@
 package africa.semicolon.playlist.config.spotify;
 
-import africa.semicolon.playlist.song.demoSong.Song;
+import africa.semicolon.playlist.song.demoSong.model.Song;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -25,7 +26,7 @@ import java.util.Properties;
 public class SpotifyService {
 
     public Song findingSong(String songName) throws JsonProcessingException {
-        String path = "C:\\Users\\user\\IdeaProjects\\playlist\\src\\main\\resources\\secret.properties";
+        String path = "C:\\Users\\user\\IdeaProjects\\playlist\\src\\main\\resources\\secrets.properties";
         FileInputStream fileInput;
         try {
             fileInput = new FileInputStream(path);
@@ -50,7 +51,7 @@ public class SpotifyService {
         String encodedString = new String(encodedBytes, StandardCharsets.UTF_8);
         headersOne.set("Authorization", "Basic " + encodedString);
 
-        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("grant_type", "client_credentials");
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headersOne);
@@ -83,6 +84,8 @@ public class SpotifyService {
         String image = tracks.get(0).get("album").get("images").get(1).get("url").asText();
         String explicit = tracks.get(0).get("explicit").asText();
         boolean isExplicit = explicit.equals("false");
+
+
         Date releaseDate;
         try {
             releaseDate = new SimpleDateFormat("yyyy-MM-dd").parse(tracks.get(0).get("album").get("release_date").asText());
@@ -93,6 +96,7 @@ public class SpotifyService {
         String duration = tracks.get(0).get("duration_ms").asText();
         String externalHref = tracks.get(0).get("external_urls").get("spotify").asText();
         String playBack = tracks.get(0).get("preview_url").asText();
+
 
         return Song.builder()
                 .spotifyId(spotifyId)
@@ -120,5 +124,10 @@ public class SpotifyService {
         }
         return artistsString.toString();
     }
+
+    /* How to convert Date to LocalDate
+         Date date = new Date();
+         Instant instant = date.toInstant();
+      LocalDate localDate = instant.atZone(ZoneId.systemDefault()).toLocalDate(); */
 
 }

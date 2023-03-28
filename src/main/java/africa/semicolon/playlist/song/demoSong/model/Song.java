@@ -1,4 +1,4 @@
-package africa.semicolon.playlist.song.demoSong;
+package africa.semicolon.playlist.song.demoSong.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
@@ -7,7 +7,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
+
+import static africa.semicolon.playlist.config.utilities.PlaylistUtilities.PATTERN;
 
 @Entity
 @Setter
@@ -25,7 +28,7 @@ public class Song {
     private String artiste;
     private String image;
     private boolean explicit;
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = PATTERN)
     private Date releaseDate;
     private String albumName;
     private String duration;

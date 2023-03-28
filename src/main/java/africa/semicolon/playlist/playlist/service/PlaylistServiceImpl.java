@@ -7,7 +7,6 @@ import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.playlist.dto.CreatePlaylistReq;
 import africa.semicolon.playlist.playlist.dto.CreatePlaylistResponse;
 import africa.semicolon.playlist.playlist.dto.FindPlaylistResponse;
-import africa.semicolon.playlist.playlist.dto.UploadPlaylistImageResponse;
 import africa.semicolon.playlist.playlist.repository.PlaylistRepository;
 import com.github.fge.jsonpatch.JsonPatch;
 import lombok.RequiredArgsConstructor;
@@ -44,13 +43,13 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    public UploadPlaylistImageResponse uploadProfileImage(MultipartFile profileImage, Long playlistId) {
+    public ApiResponse uploadProfileImage(MultipartFile profileImage, Long playlistId) {
         Optional<PlayList> foundPlaylist = privateFindPlaylistById(playlistId);
         if (foundPlaylist.isEmpty()) throw new PlaylistNotFoundException("Playlist with id " + playlistId + " not found");
         String imageUrl = cloudService.upload(profileImage);
         foundPlaylist.ifPresent(playList -> updatePlaylistProfileImage(imageUrl, playList));
 
-        return UploadPlaylistImageResponse
+        return ApiResponse
                 .builder()
                 .status(HttpStatus.OK)
                 .message("SUCCESS")

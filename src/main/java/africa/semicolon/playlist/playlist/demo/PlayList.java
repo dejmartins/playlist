@@ -1,6 +1,5 @@
 package africa.semicolon.playlist.playlist.demo;
 
-import africa.semicolon.playlist.playlist.plan.PlanType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
@@ -17,7 +16,6 @@ import java.util.List;
 @Data
 @Builder
 public class PlayList {
-
     @Id
     private Long id;
     @NotNull
