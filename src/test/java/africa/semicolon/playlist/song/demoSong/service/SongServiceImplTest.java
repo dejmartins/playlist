@@ -33,13 +33,4 @@ class SongServiceImplTest {
                 .spotifyId("spotifyId-123")
                 .build();
     }
-
-    @Test
-    void getSongFromOurDB() {
-        songService.saveSong(song);
-        //SongResponse response = songService.getSongByTitle("Party no dey stop");
-
-//        assertThat(response).isNotNull();
-//        assertThat(response.getAlbumName()).isEqualTo("AG Baby");
-    }
 }

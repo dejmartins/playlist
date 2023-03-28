@@ -14,24 +14,24 @@ import org.springframework.web.bind.annotation.*;
 public class LikedSongController {
     private LikedSongService likedSongService;
 
-    @PostMapping("/like/{userEntityId}/{songTitle}")
-    public ResponseEntity<ApiResponse> likeSong(@PathVariable Long userEntityId, @PathVariable String songTitle) {
+    @PostMapping("/like")
+    public ResponseEntity<ApiResponse> likeSong(@RequestParam Long userEntityId, @RequestParam String songTitle) {
         ApiResponse response = likedSongService.likeSong(userEntityId, songTitle);
         return ResponseEntity.ok(response);
     }
-    @GetMapping("/likedSong/{userEntityId}/{songTitle}")
-    public ResponseEntity<SongResponse> findLikedSong(@PathVariable Long userEntityId, @PathVariable String songTitle) {
+    @GetMapping("/likedSong")
+    public ResponseEntity<SongResponse> findLikedSong(@RequestParam Long userEntityId, @RequestParam String songTitle) {
         SongResponse songResponse = likedSongService.findALikedSong(userEntityId, songTitle);
         return ResponseEntity.ok(songResponse);
     }
-    @GetMapping("/findAll/{userEntity}/{songTitle}/{pageNumber}")
+    @GetMapping("/findAll")
     public ResponseEntity<Page<SongResponse>> findAllLikedSongsByAUser(
-            @PathVariable Long userEntity, @PathVariable String songTitle, @PathVariable int pageNumber) {
+            @RequestParam Long userEntity, @RequestParam String songTitle, @RequestParam int pageNumber) {
         Page<SongResponse> songResponses = likedSongService.findAllLikedSongsByUser(userEntity, songTitle, pageNumber);
         return ResponseEntity.ok(songResponses);
     }
-    @PostMapping("/song/dislike/{userEntityId}/{songTitle}")
-    public ResponseEntity<ApiResponse> dislikeSong(@PathVariable Long userEntityId, @PathVariable String songTitle) {
+    @PostMapping("/dislike")
+    public ResponseEntity<ApiResponse> dislikeSong(@RequestParam Long userEntityId, @RequestParam String songTitle) {
         ApiResponse response = likedSongService.dislikeSong(userEntityId, songTitle);
         return ResponseEntity.ok(response);
     }
