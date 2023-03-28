@@ -20,25 +20,6 @@ public class SongServiceImpl implements SongService {
     private final ModelMapper mapper;
 
     @Override
-    public SongResponse getSongByTitle(String songTitle) {
-        Song song = songRepository.findSongByTitle(songTitle)
-                .orElseThrow(()->new SongNotFoundException(SONG_NOT_FOUND));
-
-        return mapper.map(song, SongResponse.class);
-    }
-
-    @Override
-    public Song getSongBySongTitle(String songTitle) {
-        return songRepository.findSongByTitle(songTitle)
-                .orElseThrow(()-> new SongNotFoundException(SONG_NOT_FOUND));
-    }
-
-    @Override
-    public void saveSong(Song song) {
-        songRepository.save(song);
-    }
-
-    @Override
     public SongResponse searchSong(String songTitle) {
         SongResponse response = getSongByTitle(songTitle);
         if (response != null) {
@@ -52,6 +33,20 @@ public class SongServiceImpl implements SongService {
             return mapper.map(savedSong, SongResponse.class);
         }
     }
+
+    private SongResponse getSongByTitle(String songTitle) {
+        Song song = songRepository.findSongByTitle(songTitle)
+                .orElseThrow(()->new SongNotFoundException(SONG_NOT_FOUND));
+
+        return mapper.map(song, SongResponse.class);
+    }
+
+    @Override
+    public Song getSongBySongTitle(String songTitle) {
+        return songRepository.findSongByTitle(songTitle)
+                .orElseThrow(()->new SongNotFoundException(SONG_NOT_FOUND));
+    }
+
 
     private Song getSongFromSpotify(String songTitle) {
         try {
