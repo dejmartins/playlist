@@ -2,13 +2,13 @@ package africa.semicolon.playlist.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class PlaylistUserNotFoundException extends PlaylistException {
+public class ContributorNotFoundException extends PlaylistException {
 
-    public PlaylistUserNotFoundException() {
+    public ContributorNotFoundException() {
         this("Playlist_User not found!");
     }
 
-    public PlaylistUserNotFoundException(String message) {
+    public ContributorNotFoundException(String message) {
         super(message, HttpStatus.NOT_FOUND);
     }
 }

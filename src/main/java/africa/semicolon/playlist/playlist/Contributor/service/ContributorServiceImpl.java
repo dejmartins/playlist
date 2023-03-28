@@ -2,7 +2,7 @@ package africa.semicolon.playlist.playlist.Contributor.service;
 
 import africa.semicolon.playlist.config.ApiResponse;
 import africa.semicolon.playlist.auth.services.AuthService;
-import africa.semicolon.playlist.exception.PlaylistUserNotFoundException;
+import africa.semicolon.playlist.exception.ContributorNotFoundException;
 import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.playlist.Contributor.demoContributor.Contributor;
 import africa.semicolon.playlist.playlist.Contributor.repository.ContributorRepository;
@@ -47,7 +47,7 @@ public class ContributorServiceImpl implements ContributorService {
     @Override
     public ApiResponse removeContributor(String username, PlayList playList) {
         UserEntity userEntity = userEntityService.privateFindUserByUsername(username);
-        Contributor foundContributor = pluRepository.findByUserAndPlayList(userEntity, playList).orElseThrow(PlaylistUserNotFoundException::new);
+        Contributor foundContributor = pluRepository.findByUserAndPlayList(userEntity, playList).orElseThrow(ContributorNotFoundException::new);
         pluRepository.delete(foundContributor);
         return ApiResponse.builder()
                 .message("SUCCESSFUL")
@@ -58,7 +58,7 @@ public class ContributorServiceImpl implements ContributorService {
     @Override
     public Set<PlayList> getPlaylistForUser() {
         UserEntity userEntity = authService.getCurrentUser();
-        List<Contributor> foundContributor = pluRepository.findAllByUser(userEntity).orElseThrow(PlaylistUserNotFoundException::new);
+        List<Contributor> foundContributor = pluRepository.findAllByUser(userEntity).orElseThrow(ContributorNotFoundException::new);
         Set<PlayList> userPlaylists = new HashSet<>();
         for (Contributor contributor : foundContributor) {
             userPlaylists.add(contributor.getPlayList());
@@ -68,7 +68,7 @@ public class ContributorServiceImpl implements ContributorService {
 
     @Override
     public Set<UserEntity> getPlaylistContributors(PlayList playList) {
-        List<Contributor> foundContributor = pluRepository.findAllByPlayList(playList).orElseThrow(PlaylistUserNotFoundException::new);
+        List<Contributor> foundContributor = pluRepository.findAllByPlayList(playList).orElseThrow(ContributorNotFoundException::new);
         Set<UserEntity> users = new HashSet<>();
         for (Contributor contributor : foundContributor) {
             users.add(contributor.getUser());

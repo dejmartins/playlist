@@ -2,7 +2,7 @@ package africa.semicolon.playlist.playlist.subscription.service;
 
 import africa.semicolon.playlist.auth.services.AuthService;
 import africa.semicolon.playlist.config.ApiResponse;
-import africa.semicolon.playlist.exception.PlaylistUserNotFoundException;
+import africa.semicolon.playlist.exception.ContributorNotFoundException;
 import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.playlist.service.PlaylistService;
 import africa.semicolon.playlist.playlist.subscription.demoSubscriber.Subscriber;
@@ -101,7 +101,7 @@ public class SubscriberServiceImpl implements SubscriberService {
     @Override
     public Set<UserEntity> getSubscribers(PlayList playList) {
         Set<UserEntity> userEntitySet = new HashSet<>();
-        List<Subscriber> subscribers = subscriberRepository.findAllByPlayList(playList).orElseThrow(PlaylistUserNotFoundException::new);
+        List<Subscriber> subscribers = subscriberRepository.findAllByPlayList(playList).orElseThrow(ContributorNotFoundException::new);
         for (Subscriber aSubscriber : subscribers) {
             userEntitySet.add(aSubscriber.getUser());
         }
