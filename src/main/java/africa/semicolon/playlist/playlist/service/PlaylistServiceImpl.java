@@ -3,10 +3,8 @@ package africa.semicolon.playlist.playlist.service;
 import africa.semicolon.playlist.config.ApiResponse;
 import africa.semicolon.playlist.config.cloud.CloudService;
 import africa.semicolon.playlist.exception.PlaylistNotFoundException;
-//import africa.semicolon.playlist.playlist.Contributor.service.ContributorService;
 import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.playlist.dto.CreatePlaylistReq;
-import africa.semicolon.playlist.playlist.dto.CreatePlaylistResponse;
 import africa.semicolon.playlist.playlist.dto.FindPlaylistResponse;
 import africa.semicolon.playlist.playlist.repository.PlaylistRepository;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -27,8 +25,6 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     private final CloudService cloudService;
     private final PlaylistRepository playlistRepository;
-
-//    private final ContributorService contributorService;
 
     @Override
     public PlayList createPlaylist(CreatePlaylistReq createPlaylistRequest) {

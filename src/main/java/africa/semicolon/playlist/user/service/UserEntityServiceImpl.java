@@ -37,4 +37,10 @@ public class UserEntityServiceImpl implements UserEntityService {
         return userEntityRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
     }
 
+    @Override
+    public UserEntity getUserById(Long userId) {
+        return userEntityRepository.findById(userId)
+                .orElseThrow(()-> new UserNotFoundException("User could not be found"));
+    }
+
 }

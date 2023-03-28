@@ -1,6 +1,6 @@
 package africa.semicolon.playlist.config.spotify;
 
-import africa.semicolon.playlist.song.demoSong.Song;
+import africa.semicolon.playlist.song.demoSong.model.Song;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,7 +37,7 @@ public class SpotifyService {
         String encodedString = new String(encodedBytes, StandardCharsets.UTF_8);
         headersOne.set("Authorization", "Basic " + encodedString);
 
-        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("grant_type", "client_credentials");
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headersOne);
@@ -50,7 +50,7 @@ public class SpotifyService {
         RestTemplate restTemplateToFindSong = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
-//        String accessToken = "BQAQe9D2bGb0nN9bLmuUoyVZzkaF8d37vgYIKUUJDprxvvAt0n13CHBnI5OhIkU-9pW3uyHn7_7Qz7UQv1UWD6dinoL4ImMPCQeRVjIWTOAei5a6ez87";
+
         headers.set("Authorization", "Bearer " + accessToken);
 
         String url = "https://api.spotify.com/v1/search?q=" + songTitle + "&type=track";
@@ -70,6 +70,8 @@ public class SpotifyService {
         String image = tracks.get(0).get("album").get("images").get(1).get("url").asText();
         String explicit = tracks.get(0).get("explicit").asText();
         boolean isExplicit = explicit.equals("false");
+
+
         Date releaseDate;
         try {
             releaseDate = new SimpleDateFormat("yyyy-MM-dd").parse(tracks.get(0).get("album").get("release_date").asText());
@@ -80,6 +82,7 @@ public class SpotifyService {
         String duration = tracks.get(0).get("duration_ms").asText();
         String externalHref = tracks.get(0).get("external_urls").get("spotify").asText();
         String playBack = tracks.get(0).get("preview_url").asText();
+
 
         return Song.builder()
                 .spotifyId(spotifyId)

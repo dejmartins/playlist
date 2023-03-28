@@ -1,4 +1,5 @@
-package africa.semicolon.playlist.song.playlistSong.service;
+package africa.semicolon.playlist.playlistSong.service;
+
 
 import africa.semicolon.playlist.config.ApiResponse;
 import africa.semicolon.playlist.playlist.demo.PlayList;
@@ -7,13 +8,13 @@ import java.util.List;
 import java.util.Set;
 
 public interface PlaylistSongService {
-
-    ApiResponse addSongToPlayList(PlayList playList, Song song);
+     ApiResponse addSongToPlayList(PlayList playList, Song song);
 
     ApiResponse addSongsToPlayList(PlayList playList, List<Song> songs);
 
     ApiResponse deleteSongFromPlayList(PlayList playList, Song song);
 
     Set<Song> getSongsInPlaylist(PlayList playList);
+
 
 }

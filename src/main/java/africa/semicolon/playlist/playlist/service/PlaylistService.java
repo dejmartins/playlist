@@ -3,7 +3,6 @@ package africa.semicolon.playlist.playlist.service;
 import africa.semicolon.playlist.config.ApiResponse;
 import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.playlist.dto.CreatePlaylistReq;
-import africa.semicolon.playlist.playlist.dto.CreatePlaylistResponse;
 import africa.semicolon.playlist.playlist.dto.FindPlaylistResponse;
 import com.github.fge.jsonpatch.JsonPatch;
 import org.springframework.web.multipart.MultipartFile;

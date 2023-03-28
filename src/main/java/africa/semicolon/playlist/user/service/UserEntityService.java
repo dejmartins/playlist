@@ -10,4 +10,5 @@ public interface UserEntityService {
     UserEntity privateFindUserById(Long userId);
 
     UserEntity privateFindUserByUsername(String username);
+    UserEntity getUserById(Long userId);
 }
