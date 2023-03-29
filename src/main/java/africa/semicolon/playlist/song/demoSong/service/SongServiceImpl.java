@@ -33,6 +33,12 @@ public class SongServiceImpl implements SongService {
         }
     }
 
+    @Override
+    public Song getSongById(Long songId) {
+        return songRepository.findById(songId)
+                .orElseThrow(()-> new SongNotFoundException(SONG_NOT_FOUND));
+    }
+
     private SongResponse getSongByTitle(String songTitle) {
         Song song = songRepository.findSongByTitle(songTitle)
                 .orElseThrow(()->new SongNotFoundException(SONG_NOT_FOUND));
