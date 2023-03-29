@@ -1,11 +1,15 @@
 package africa.semicolon.playlist.exception;
 
-import lombok.Data;
+
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
-@Data
+
 public class PlaylistException extends RuntimeException {
 
+    @Getter
+    @Setter
     private HttpStatus status;
 
     public PlaylistException() {

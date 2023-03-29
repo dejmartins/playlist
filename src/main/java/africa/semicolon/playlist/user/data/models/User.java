@@ -1,9 +1,10 @@
 package africa.semicolon.playlist.user.data.models;
 
-import africa.semicolon.playlist.wallet.bankAccountDetails.BankAccountDetail;
 import africa.semicolon.playlist.wallet.model.Wallet;
+import africa.semicolon.playlist.wallet.bankAccountDetails.BankAccountDetail;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="users")
-public class UserEntity {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +28,8 @@ public class UserEntity {
     private String emailAddress;
     private final LocalDateTime dateJoined = LocalDateTime.now();
 
+
+
     @OneToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name="wallet_id", referencedColumnName="id")
     private Wallet wallet;
@@ -37,7 +40,7 @@ public class UserEntity {
 
     public void addBankAccountDetails(BankAccountDetail bankAccountDetail){
         bankAccountDetails.add(bankAccountDetail);
-        bankAccountDetail.setUser(this);
+//        bankAccountDetail.setUser(this);
     }
 
     public void removeBankAccountDetails(BankAccountDetail bankAccountDetail){

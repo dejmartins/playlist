@@ -62,7 +62,7 @@ public class SpotifyService {
                 url, HttpMethod.GET, entity, String.class);
 
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode root = null;
+        JsonNode root;
         try {
             root = mapper.readTree(response.getBody());
         } catch (JsonProcessingException e) {
@@ -72,7 +72,7 @@ public class SpotifyService {
 
         String title = tracks.get(0).get("name").asText();
         String spotifyId = tracks.get(0).get("id").asText();
-        String artiste = null;
+        String artiste;
         try {
             artiste = getArtists(tracks.get(0).get("album").get("artists"));
         } catch (JsonProcessingException e) {
