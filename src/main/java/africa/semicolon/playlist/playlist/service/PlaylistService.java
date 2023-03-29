@@ -21,6 +21,6 @@ public interface PlaylistService {
 
     ApiResponse deletePlaylistById(Long playlistId);
 
-    FindPlaylistResponse updatePlaylistDetails(JsonPatch jsonPatch);
+    FindPlaylistResponse updatePlaylistDetails(Long playlistId, JsonPatch jsonPatch);
 
 }

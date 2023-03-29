@@ -103,7 +103,7 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    public FindPlaylistResponse updatePlaylistDetails(JsonPatch jsonPatch) {
+    public FindPlaylistResponse updatePlaylistDetails(Long playlistId, JsonPatch jsonPatch) {
         return null;
     }
 
@@ -115,5 +115,4 @@ public class PlaylistServiceImpl implements PlaylistService {
         playList.setCoverImage(url);
         playlistRepository.save(playList);
     }
-
 }
