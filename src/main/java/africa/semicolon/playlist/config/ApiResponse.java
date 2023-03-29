@@ -1,4 +1,4 @@
-package africa.semicolon.playlist;
+package africa.semicolon.playlist.config;
 
 
 import lombok.Builder;

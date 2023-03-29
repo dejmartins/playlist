@@ -6,5 +6,9 @@ import africa.semicolon.playlist.user.dto.response.RegistrationResponse;
 
 public interface UserEntityService {
     RegistrationResponse registerUser(RegistrationRequest request);
+
+    UserEntity privateFindUserById(Long userId);
+
+    UserEntity privateFindUserByUsername(String username);
     UserEntity getUserById(Long userId);
 }

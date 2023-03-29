@@ -1,48 +1,35 @@
 package africa.semicolon.playlist.config.spotify;
 
+import africa.semicolon.playlist.exception.PlaylistException;
 import africa.semicolon.playlist.song.demoSong.model.Song;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
-import java.util.Properties;
-
 
 @Service
 public class SpotifyService {
 
-    public Song findingSong(String songName) throws JsonProcessingException {
-        String path = "C:\\Users\\user\\IdeaProjects\\playlist\\src\\main\\resources\\secrets.properties";
-        FileInputStream fileInput;
-        try {
-            fileInput = new FileInputStream(path);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        Properties properties = new Properties();
-        try {
-            properties.load(fileInput);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
-        String clientId = properties.getProperty("client-id");
-        String clientSecret = properties.getProperty("client-secret");
+    @Value("${spotify.client.id}")
+    private String clientId;
 
+    @Value("${spotify.client.secret}")
+    private String clientSecret;
+
+
+    public Song findingSong(String songTitle) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headersOne = new HttpHeaders();
         headersOne.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -64,10 +51,10 @@ public class SpotifyService {
         RestTemplate restTemplateToFindSong = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
-//        String accessToken = "BQAQe9D2bGb0nN9bLmuUoyVZzkaF8d37vgYIKUUJDprxvvAt0n13CHBnI5OhIkU-9pW3uyHn7_7Qz7UQv1UWD6dinoL4ImMPCQeRVjIWTOAei5a6ez87";
+
         headers.set("Authorization", "Bearer " + accessToken);
 
-        String url = "https://api.spotify.com/v1/search?q=" + songName + "&type=track";
+        String url = "https://api.spotify.com/v1/search?q=" + songTitle + "&type=track";
 
         HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 
@@ -75,12 +62,22 @@ public class SpotifyService {
                 url, HttpMethod.GET, entity, String.class);
 
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode root = mapper.readTree(response.getBody());
+        JsonNode root = null;
+        try {
+            root = mapper.readTree(response.getBody());
+        } catch (JsonProcessingException e) {
+            throw new PlaylistException("Unable to parse artistes");
+        }
         JsonNode tracks = root.path("tracks").path("items");
 
         String title = tracks.get(0).get("name").asText();
         String spotifyId = tracks.get(0).get("id").asText();
-        String artiste = getArtists(tracks.get(0).get("album").get("artists"));
+        String artiste = null;
+        try {
+            artiste = getArtists(tracks.get(0).get("album").get("artists"));
+        } catch (JsonProcessingException e) {
+            artiste = "";
+        }
         String image = tracks.get(0).get("album").get("images").get(1).get("url").asText();
         String explicit = tracks.get(0).get("explicit").asText();
         boolean isExplicit = explicit.equals("false");
@@ -124,10 +121,5 @@ public class SpotifyService {
         }
         return artistsString.toString();
     }
-
-    /* How to convert Date to LocalDate
-         Date date = new Date();
-         Instant instant = date.toInstant();
-      LocalDate localDate = instant.atZone(ZoneId.systemDefault()).toLocalDate(); */
 
 }
