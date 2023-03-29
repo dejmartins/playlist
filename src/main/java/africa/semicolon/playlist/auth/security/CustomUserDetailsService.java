@@ -1,7 +1,7 @@
 package africa.semicolon.playlist.auth.security;
 
-import africa.semicolon.playlist.user.data.models.UserEntity;
 import africa.semicolon.playlist.user.data.repositories.UserRepository;
+import africa.semicolon.playlist.user.data.models.UserEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -2,6 +2,7 @@ package africa.semicolon.playlist.playlist.service;
 
 import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.playlist.dto.CreatePlaylistReq;
+import africa.semicolon.playlist.playlist.dto.CreatePlaylistResponse;
 import africa.semicolon.playlist.playlist.dto.FindPlaylistResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,7 @@ class PlaylistServiceImplTest {
                 .description("Contains Asake's songs and vibes")
                 .build();
 
-        PlayList createdPlayList = playlistService.createPlaylist(request);
+        CreatePlaylistResponse createdPlayList = playlistService.createPlaylist(request);
         assertNotNull(createdPlayList);
         assertNotNull(createdPlayList.getId());
         assertEquals(createdPlayList.getName(), request.getName());
@@ -48,7 +49,7 @@ class PlaylistServiceImplTest {
                 .description("Contains Odogwu's songs")
                 .build();
 
-        PlayList createdPlayList = playlistService.createPlaylist(request);
+        CreatePlaylistResponse createdPlayList = playlistService.createPlaylist(request);
 
         FindPlaylistResponse foundPlaylist = playlistService.findPlaylistBySlug("Burnas");
         assertNotNull(foundPlaylist);
@@ -70,7 +71,7 @@ class PlaylistServiceImplTest {
                 .description("Contains Jiggy's songs")
                 .build();
 
-        PlayList createdPlayList = playlistService.createPlaylist(request);
+        CreatePlaylistResponse createdPlayList = playlistService.createPlaylist(request);
 
         FindPlaylistResponse foundPlaylist = playlistService.findPlaylistById(createdPlayList.getId());
         assertNotNull(foundPlaylist);

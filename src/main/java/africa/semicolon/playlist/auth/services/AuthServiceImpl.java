@@ -7,9 +7,11 @@ import africa.semicolon.playlist.auth.security.AuthenticatedUser;
 import africa.semicolon.playlist.exception.userExceptions.InvalidLoginDetailsException;
 import africa.semicolon.playlist.exception.userExceptions.UserAlreadyExistsException;
 import africa.semicolon.playlist.auth.security.JwtGenerator;
+import africa.semicolon.playlist.user.data.repositories.UserRepository;
+import africa.semicolon.playlist.wallet.model.Wallet;
+import africa.semicolon.playlist.wallet.repositories.WalletRepository;
 import africa.semicolon.playlist.exception.userExceptions.UserNotFoundException;
 import africa.semicolon.playlist.user.data.models.UserEntity;
-import africa.semicolon.playlist.user.data.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.math.BigDecimal;
 
 @Service
 @AllArgsConstructor
@@ -25,6 +28,7 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
 
     private UserRepository userRepository;
+    private WalletRepository walletRepository;
     private PasswordEncoder passwordEncoder;
     private JwtGenerator jwtGenerator;
     private AuthenticationManager authenticationManager;
@@ -50,11 +54,15 @@ public class AuthServiceImpl implements AuthService {
             throw new UserAlreadyExistsException();
         }
 
+        Wallet wallet = createWallet();
+
+//        User user = User.builder().build();
         UserEntity userEntity = UserEntity.builder()
                 .firstName(requestDto.getFirstName())
                 .lastName(requestDto.getLastName())
                 .emailAddress(requestDto.getEmail())
                 .password(passwordEncoder.encode(requestDto.getPassword()))
+                .wallet(wallet)
                 .build();
 
         UserEntity savedUserEntity = userRepository.save(userEntity);
@@ -77,4 +85,14 @@ public class AuthServiceImpl implements AuthService {
             throw new UserNotFoundException();
         }
     }
+
+    private Wallet createWallet() {
+        Wallet wallet = Wallet.builder()
+                .balance(BigDecimal.valueOf(0))
+                .build();
+
+        return walletRepository.save(wallet);
+    }
+
+
 }
