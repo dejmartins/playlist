@@ -1,8 +1,8 @@
 package africa.semicolon.playlist.wallet.bankAccountDetails;
 
 import africa.semicolon.playlist.exception.bankAccountDetailsExceptions.BankAccountDetailsAlreadyExistsException;
-import africa.semicolon.playlist.user.models.User;
-import africa.semicolon.playlist.user.repositories.UserRepository;
+import africa.semicolon.playlist.user.data.models.UserEntity;
+import africa.semicolon.playlist.user.data.repositories.UserRepository;
 import africa.semicolon.playlist.wallet.bankAccountDetails.dtos.requests.AddBankAccountDetailsRequest;
 import africa.semicolon.playlist.wallet.bankAccountDetails.dtos.requests.ResolveAccountRequest;
 import africa.semicolon.playlist.wallet.bankAccountDetails.dtos.responses.ResolveAccountResponse;
@@ -12,10 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import java.io.IOException;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
@@ -87,7 +85,7 @@ class BankAccountDetailServiceImplTest {
                 .emailAddress("dejimartins@gmail.com")
                 .build();
 
-        User user = User.builder()
+        UserEntity user = UserEntity.builder()
                 .id(1L)
                 .firstName("Dej")
                 .lastName("Doe")
@@ -96,7 +94,7 @@ class BankAccountDetailServiceImplTest {
                 .wallet(null)
                 .build();
 
-        when(userRepository.findUserByEmailAddress("dej@gmail.com")).thenReturn(Optional.ofNullable(user));
+        when(userRepository.findUserEntityByEmailAddress("dej@gmail.com")).thenReturn(Optional.ofNullable(user));
         bankAccountDetailService.addBankAccountDetails(request);
 
         BankAccountDetail bankAccountDetail = BankAccountDetail.builder()
@@ -117,7 +115,7 @@ class BankAccountDetailServiceImplTest {
 
     @Test
     public void bankAccountDetailsIsUniqueForEachUserTest(){
-        User user = User.builder()
+        UserEntity user = UserEntity.builder()
                 .id(1L)
                 .firstName("Dej")
                 .lastName("Doe")
@@ -126,7 +124,7 @@ class BankAccountDetailServiceImplTest {
                 .wallet(null)
                 .build();
 
-        when(userRepository.findUserByEmailAddress("dej@gmail.com")).thenReturn(Optional.ofNullable(user));
+        when(userRepository.findUserEntityByEmailAddress("dej@gmail.com")).thenReturn(Optional.ofNullable(user));
 
         BankAccountDetail bankAccountDetail = BankAccountDetail.builder()
                 .bankName("Zenith Bank")

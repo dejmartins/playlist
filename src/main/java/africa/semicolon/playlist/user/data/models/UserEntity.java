@@ -1,10 +1,9 @@
-package africa.semicolon.playlist.user.models;
+package africa.semicolon.playlist.user.data.models;
 
-import africa.semicolon.playlist.wallet.model.Wallet;
 import africa.semicolon.playlist.wallet.bankAccountDetails.BankAccountDetail;
+import africa.semicolon.playlist.wallet.model.Wallet;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="users")
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,12 +22,15 @@ public class User {
     private String firstName;
     private String lastName;
     private String password;
+    private String username;
     @Column(unique = true, nullable = false)
     private String emailAddress;
     private final LocalDateTime dateJoined = LocalDateTime.now();
+
     @OneToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name="wallet_id", referencedColumnName="id")
     private Wallet wallet;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "bankAccountDetails_id")
     private List<BankAccountDetail> bankAccountDetails;

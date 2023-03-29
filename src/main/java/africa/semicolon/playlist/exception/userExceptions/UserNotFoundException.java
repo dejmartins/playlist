@@ -12,4 +12,5 @@ public class UserNotFoundException extends PlaylistException {
     public UserNotFoundException(String message) {
         super(message, HttpStatus.NOT_FOUND);
     }
+
 }

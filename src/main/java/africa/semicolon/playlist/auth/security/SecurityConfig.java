@@ -26,6 +26,8 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter authenticationFilter;
     private final String[] permittedRoutes = {"/api/v1/auth/signup", "/api/v1/auth/login", "api/v1/bankAccountDetails"};
 
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http

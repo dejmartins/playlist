@@ -1,6 +1,7 @@
 package africa.semicolon.playlist.wallet.bankAccountDetails;
 
-import africa.semicolon.playlist.user.models.User;
+import africa.semicolon.playlist.user.data.models.User;
+import africa.semicolon.playlist.user.data.models.UserEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -26,5 +27,5 @@ public class BankAccountDetail {
     private String accountNumber;
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    private UserEntity user;
 }

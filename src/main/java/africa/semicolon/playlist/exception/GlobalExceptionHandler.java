@@ -23,6 +23,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         var response = ExceptionResponse.builder()
                 .message(e.getMessage())
                 .status(e.getStatus())
+                .statusCode(e.getStatus().value())
                 .build();
         return new ResponseEntity<>(response, e.getStatus());
     }

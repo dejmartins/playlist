@@ -2,8 +2,8 @@ package africa.semicolon.playlist.wallet.bankAccountDetails;
 
 import africa.semicolon.playlist.config.paystack.PaystackConfiguration;
 import africa.semicolon.playlist.exception.bankAccountDetailsExceptions.BankAccountDetailsAlreadyExistsException;
-import africa.semicolon.playlist.user.models.User;
-import africa.semicolon.playlist.user.repositories.UserRepository;
+import africa.semicolon.playlist.user.data.models.UserEntity;
+import africa.semicolon.playlist.user.data.repositories.UserRepository;
 import africa.semicolon.playlist.wallet.bankAccountDetails.dtos.requests.AddBankAccountDetailsRequest;
 import africa.semicolon.playlist.wallet.bankAccountDetails.dtos.requests.DeleteBankAccountDetailsRequest;
 import africa.semicolon.playlist.wallet.bankAccountDetails.dtos.requests.ResolveAccountRequest;
@@ -85,7 +85,7 @@ public class BankAccountDetailServiceImpl implements BankAccountDetailService{
     }
 
     private void addNewBankAccountDetailsToUserList(BankAccountDetail savedBankAccountDetail, String emailAddress) {
-        Optional<User> foundUser = userRepository.findUserByEmailAddress(emailAddress);
+        Optional<UserEntity> foundUser = userRepository.findUserEntityByEmailAddress(emailAddress);
         foundUser.ifPresent(user -> user.addBankAccountDetails(savedBankAccountDetail));
         foundUser.ifPresent(userRepository::save);
     }
@@ -108,7 +108,7 @@ public class BankAccountDetailServiceImpl implements BankAccountDetailService{
     }
 
     private void removeBankAccountDetailsFromUserList(String emailAddress, BankAccountDetail bankAccountDetail) {
-        Optional<User> foundUser = userRepository.findUserByEmailAddress(emailAddress);
+        Optional<UserEntity> foundUser = userRepository.findUserEntityByEmailAddress(emailAddress);
         foundUser.ifPresent(user -> user.removeBankAccountDetails(bankAccountDetail));
         userRepository.save(foundUser.get());
     }

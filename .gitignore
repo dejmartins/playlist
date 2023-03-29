@@ -18,8 +18,7 @@ target/
 *.iws
 *.iml
 *.ipr
-/src/main/resources/secret.properties
-.env
+/src/main/resources/secrets.properties
 
 ### NetBeans ###
 /nbproject/private/
@@ -33,5 +32,4 @@ build/
 
 ### VS Code ###
 .vscode/
-.idea
-/src/main/resources/secret.properties
+

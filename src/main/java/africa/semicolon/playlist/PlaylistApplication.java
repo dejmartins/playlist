@@ -6,6 +6,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
+
+
 @SpringBootApplication
 @OpenAPIDefinition(
 		info = @Info(title = "Playlist API", version = "v0.0.1-SNAPSHOT")
