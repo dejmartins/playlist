@@ -3,16 +3,19 @@ package africa.semicolon.playlist.auth.services;
 import africa.semicolon.playlist.auth.dtos.requests.LoginRequestDto;
 import africa.semicolon.playlist.auth.dtos.requests.SignupRequestDto;
 import africa.semicolon.playlist.auth.dtos.responses.TokenResponseDto;
+import africa.semicolon.playlist.auth.security.AuthenticatedUser;
 import africa.semicolon.playlist.exception.userExceptions.InvalidLoginDetailsException;
 import africa.semicolon.playlist.exception.userExceptions.UserAlreadyExistsException;
 import africa.semicolon.playlist.auth.security.JwtGenerator;
-import africa.semicolon.playlist.user.data.models.User;
+import africa.semicolon.playlist.exception.userExceptions.UserNotFoundException;
+import africa.semicolon.playlist.user.data.models.UserEntity;
 import africa.semicolon.playlist.user.data.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -47,15 +50,31 @@ public class AuthServiceImpl implements AuthService {
             throw new UserAlreadyExistsException();
         }
 
-        User user = User.builder()
+        UserEntity userEntity = UserEntity.builder()
                 .firstName(requestDto.getFirstName())
                 .lastName(requestDto.getLastName())
                 .emailAddress(requestDto.getEmail())
                 .password(passwordEncoder.encode(requestDto.getPassword()))
                 .build();
 
-        User savedUser = userRepository.save(user);
-        String token = jwtGenerator.generateToken(savedUser);
+        UserEntity savedUserEntity = userRepository.save(userEntity);
+        String token = jwtGenerator.generateToken(savedUserEntity);
         return TokenResponseDto.builder().token("Bearer " + token).build();
+    }
+
+    @Override
+    public UserEntity getCurrentUser() {
+        try {
+            AuthenticatedUser authenticatedUser =
+                    (AuthenticatedUser) SecurityContextHolder
+                            .getContext()
+                            .getAuthentication()
+                            .getPrincipal();
+
+            return userRepository.findById(authenticatedUser.getUserEntity().getId())
+                    .orElseThrow(UserNotFoundException::new);
+        } catch (Exception e) {
+            throw new UserNotFoundException();
+        }
     }
 }
