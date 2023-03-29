@@ -9,6 +9,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Objects;
 
 import static africa.semicolon.playlist.config.utilities.PlaylistUtilities.PATTERN;
 

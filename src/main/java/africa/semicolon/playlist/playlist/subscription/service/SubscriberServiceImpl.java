@@ -3,6 +3,8 @@ package africa.semicolon.playlist.playlist.subscription.service;
 import africa.semicolon.playlist.auth.services.AuthService;
 import africa.semicolon.playlist.config.ApiResponse;
 import africa.semicolon.playlist.exception.ContributorNotFoundException;
+import africa.semicolon.playlist.exception.UnauthorizedActionException;
+import africa.semicolon.playlist.playlist.Contributor.service.ContributorService;
 import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.playlist.service.PlaylistService;
 import africa.semicolon.playlist.playlist.subscription.demoSubscriber.Subscriber;
@@ -24,6 +26,7 @@ public class SubscriberServiceImpl implements SubscriberService {
     private final PlaylistService playlistService;
     private final UserEntityService userEntityService;
     private final SubscriberRepository subscriberRepository;
+    private final ContributorService contributorService;
 
     @Override
     public ApiResponse subscribeToPlaylist(PlayList playList) {
@@ -77,6 +80,7 @@ public class SubscriberServiceImpl implements SubscriberService {
 
     @Override
     public ApiResponse removeUserFromPlaylist(UserEntity userEntity, PlayList playList) {
+        if (!contributorService.isAuthor(authService.getCurrentUser(), playList)) throw new UnauthorizedActionException("Only the author can add new contributors");
         Subscriber subscriber = subscriberRepository.findByUserAndPlayList(userEntity, playList).orElseThrow();
         subscriberRepository.delete(subscriber);
         return ApiResponse.builder()
@@ -100,6 +104,7 @@ public class SubscriberServiceImpl implements SubscriberService {
 
     @Override
     public Set<UserEntity> getSubscribers(PlayList playList) {
+        if (!contributorService.isAuthor(authService.getCurrentUser(), playList)) throw new UnauthorizedActionException("Only the author can add new contributors");
         Set<UserEntity> userEntitySet = new HashSet<>();
         List<Subscriber> subscribers = subscriberRepository.findAllByPlayList(playList).orElseThrow(ContributorNotFoundException::new);
         for (Subscriber aSubscriber : subscribers) {

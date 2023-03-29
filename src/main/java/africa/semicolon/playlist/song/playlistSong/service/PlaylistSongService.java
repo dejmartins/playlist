@@ -16,4 +16,12 @@ public interface PlaylistSongService {
 
     Set<Song> getSongsInPlaylist(PlayList playList);
 
+    ApiResponse addSongToPlayList(Long playlistId, String songTitle);
+
+    ApiResponse addSongsToPlayList(Long playlistId, List<Song> songs);
+
+    ApiResponse deleteSongFromPlayList(Long playlistId, String songTitle);
+
+    Set<Song> getSongsInPlaylist(Long playlistId);
+
 }

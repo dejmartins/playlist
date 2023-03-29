@@ -5,7 +5,6 @@ import africa.semicolon.playlist.exception.SongNotFoundException;
 import africa.semicolon.playlist.song.demoSong.dto.response.SongResponse;
 import africa.semicolon.playlist.song.demoSong.model.Song;
 import africa.semicolon.playlist.song.demoSong.repository.SongRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -54,10 +53,6 @@ public class SongServiceImpl implements SongService {
     }
 
     private Song getSongFromSpotify(String songTitle) {
-        try {
-            return spotifyService.findingSong(songTitle);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        return spotifyService.findingSong(songTitle);
     }
 }

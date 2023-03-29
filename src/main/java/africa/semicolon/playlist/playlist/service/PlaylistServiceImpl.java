@@ -1,46 +1,61 @@
 package africa.semicolon.playlist.playlist.service;
 
+import africa.semicolon.playlist.auth.services.AuthService;
 import africa.semicolon.playlist.config.ApiResponse;
 import africa.semicolon.playlist.config.cloud.CloudService;
 import africa.semicolon.playlist.exception.PlaylistNotFoundException;
+import africa.semicolon.playlist.exception.UnauthorizedActionException;
+import africa.semicolon.playlist.playlist.Contributor.service.ContributorService;
 import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.playlist.dto.CreatePlaylistReq;
+import africa.semicolon.playlist.playlist.dto.CreatePlaylistResponse;
 import africa.semicolon.playlist.playlist.dto.FindPlaylistResponse;
+import africa.semicolon.playlist.playlist.dto.UpdatePlaylistDetailsRequest;
 import africa.semicolon.playlist.playlist.repository.PlaylistRepository;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
-import lombok.RequiredArgsConstructor;
+import africa.semicolon.playlist.user.data.models.UserEntity;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import java.util.Set;
 
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class PlaylistServiceImpl implements PlaylistService {
 
     private final CloudService cloudService;
     private final PlaylistRepository playlistRepository;
+    private final AuthService authService;
+    private final ContributorService contributorService;
 
     @Override
-    public PlayList createPlaylist(CreatePlaylistReq createPlaylistRequest) {
+    public CreatePlaylistResponse createPlaylist(CreatePlaylistReq createPlaylistRequest) {
         PlayList playlistRequest = PlayList.builder()
                 .slug(createPlaylistRequest.getSlug())
                 .name(createPlaylistRequest.getName())
                 .description(createPlaylistRequest.getDescription())
                 .isPublic(createPlaylistRequest.getIsPublic())
                 .build();
-
-        return playlistRepository.save(playlistRequest);
+        PlayList savedPlaylist = playlistRepository.save(playlistRequest);
+        contributorService.addAuthorToPlaylist(authService.getCurrentUser(), savedPlaylist);
+        return CreatePlaylistResponse.builder()
+                .id(savedPlaylist.getId())
+                .name(savedPlaylist.getName())
+                .coverImage(savedPlaylist.getCoverImage())
+                .description(savedPlaylist.getDescription())
+                .slug(savedPlaylist.getSlug())
+                .isPublic(savedPlaylist.getIsPublic())
+                .build();
     }
 
     @Override
     public ApiResponse updatePlaylistImage(MultipartFile profileImage, Long playlistId) {
         PlayList foundPlaylist = privateFindPlaylistById(playlistId);
+        Set<UserEntity> contributors = contributorService.getPlaylistContributors(foundPlaylist);
+        if (!contributors.contains(authService.getCurrentUser())) throw new UnauthorizedActionException();
         String imageUrl = cloudService.upload(profileImage);
         updatePlaylistProfileImage(imageUrl, foundPlaylist);
 
@@ -80,6 +95,8 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     public ApiResponse deletePlaylistBySlug(String slug) {
         PlayList foundPlaylist = playlistRepository.findBySlug(slug).orElseThrow(PlaylistNotFoundException::new);
+        UserEntity currentUser = authService.getCurrentUser();
+        if (!contributorService.isAuthor(currentUser, foundPlaylist)) throw new UnauthorizedActionException("You are not permitted to delete this playlist!");
         playlistRepository.delete(foundPlaylist);
         return ApiResponse.builder()
                 .status(HttpStatus.OK)
@@ -90,6 +107,8 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     public ApiResponse deletePlaylistById(Long playlistId) {
         PlayList foundPlaylist = playlistRepository.findById(playlistId).orElseThrow(PlaylistNotFoundException::new);
+        UserEntity currentUser = authService.getCurrentUser();
+        if (!contributorService.isAuthor(currentUser, foundPlaylist)) throw new UnauthorizedActionException("You are not permitted to delete this playlist!");
         playlistRepository.delete(foundPlaylist);
         return ApiResponse.builder()
                 .status(HttpStatus.OK)
@@ -98,30 +117,23 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    public FindPlaylistResponse updatePlaylistDetails(Long playlistId, JsonPatch updatePayload) {
-        ObjectMapper mapper = new ObjectMapper();
-        PlayList foundPlaylist = playlistRepository.findById(playlistId).orElseThrow(PlaylistNotFoundException::new);
-        //Playlist Object to node
-        JsonNode node = mapper.convertValue(foundPlaylist, JsonNode.class);
-        try {
-            //apply patch
-            JsonNode updatedNode = updatePayload.apply(node);
-            //node to Playlist Object
-            var updatedPlaylist = mapper.convertValue(updatedNode, PlayList.class);
-            PlayList newUpdatedPlaylist = playlistRepository.save(updatedPlaylist);
-            return FindPlaylistResponse.builder()
-                    .id(newUpdatedPlaylist.getId())
-                    .name(newUpdatedPlaylist.getName())
-                    .coverImage(newUpdatedPlaylist.getCoverImage())
-                    .description(newUpdatedPlaylist.getDescription())
-                    .slug(newUpdatedPlaylist.getSlug())
-                    .isPublic(newUpdatedPlaylist.getIsPublic())
-                    .build();
-
-        } catch (JsonPatchException e) {
-            log.error(e.getMessage());
-            throw new RuntimeException();
-        }
+    public FindPlaylistResponse updatePlaylistDetails(UpdatePlaylistDetailsRequest updatePlaylistDetailsRequest) {
+        PlayList foundPlaylist = playlistRepository.findById(updatePlaylistDetailsRequest.getPlaylistId()).orElseThrow(PlaylistNotFoundException::new);
+        Set<UserEntity> contributors = contributorService.getPlaylistContributors(foundPlaylist);
+        if (!contributors.contains(authService.getCurrentUser())) throw new UnauthorizedActionException();
+        foundPlaylist.setDescription(updatePlaylistDetailsRequest.getDescription());
+        foundPlaylist.setName(updatePlaylistDetailsRequest.getName());
+        foundPlaylist.setSlug(updatePlaylistDetailsRequest.getSlug());
+        foundPlaylist.setIsPublic(updatePlaylistDetailsRequest.getIsPublic());
+        PlayList newUpdatedPlaylist = playlistRepository.save(foundPlaylist);
+        return FindPlaylistResponse.builder()
+                .id(newUpdatedPlaylist.getId())
+                .name(newUpdatedPlaylist.getName())
+                .coverImage(newUpdatedPlaylist.getCoverImage())
+                .description(newUpdatedPlaylist.getDescription())
+                .slug(newUpdatedPlaylist.getSlug())
+                .isPublic(newUpdatedPlaylist.getIsPublic())
+                .build();
     }
 
     @Override
