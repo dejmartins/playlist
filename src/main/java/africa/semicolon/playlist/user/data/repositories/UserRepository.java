@@ -3,7 +3,6 @@ package africa.semicolon.playlist.user.data.repositories;
 import africa.semicolon.playlist.user.data.models.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
 import java.util.Optional;
 
 @Repository
