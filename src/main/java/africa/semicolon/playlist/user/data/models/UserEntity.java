@@ -20,6 +20,7 @@ public class UserEntity {
     private String firstName;
     private String lastName;
     private String password;
+    private String username;
     @Column(unique = true, nullable = false)
     private String emailAddress;
     private final LocalDateTime dateJoined = LocalDateTime.now();

@@ -1,4 +1,4 @@
-package africa.semicolon.playlist.playlist.playlistUser.demoPlaylistUser;
+package africa.semicolon.playlist.playlist.Contributor.demoContributor;
 
 import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.user.data.models.UserEntity;
@@ -10,18 +10,19 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Builder
-@Table
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlaylistUser {
+//@Table(name = "contributors")
+public class Contributor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.DETACH)
     private UserEntity user;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.DETACH)
     private PlayList playList;
+    private boolean isAuthor;
 
 }

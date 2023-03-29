@@ -1,43 +1,28 @@
-package africa.semicolon.playlist.song.demoSong.service;
+package africa.semicolon.playlist.config.spotify;
 
-
-import africa.semicolon.playlist.song.demoSong.dto.response.SongResponse;
 import africa.semicolon.playlist.song.demoSong.model.Song;
-import org.junit.jupiter.api.BeforeEach;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+
 @SpringBootTest
-class SongServiceImplTest {
+@ExtendWith(SpringExtension.class)
+@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
+@Slf4j
+class SpotifyServiceTest {
+
     @Autowired
-    private SongService songService;
-    private Song song;
-    @BeforeEach
-    void setUp() {
-        song = Song.builder()
-                .title("Party no dey stop")
-                .albumName("AG Baby")
-                .artiste("Adekunle Gold")
-                .releaseDate(new Date(2023, Calendar.MARCH, 19))
-                .spotifyId("spotifyId-123")
-                .build();
-    }
-
-    @Test
-    void getSongFromOurDB() {
-        songService.saveSong(song);
-        SongResponse response = songService.getSongByTitle("Party no dey stop");
-
-        assertThat(response).isNotNull();
-        assertThat(response.getAlbumName()).isEqualTo("AG Baby");
-    }
+    private SpotifyService spotifyService;
 
     @Test
     void findSongTest() {
@@ -60,7 +45,7 @@ class SongServiceImplTest {
                 .externalHref("https://open.spotify.com/track/6wuMo4ZR83PhlhXhJ1S3VY")
                 .build();
 
-        Song spotifySong = songService.getSongBySongTitle("GWAGWALADA");
+        Song spotifySong = spotifyService.findingSong("GWAGWALADA");
         assertEquals(foundSong.getSpotifyId(), spotifySong.getSpotifyId());
         assertEquals(foundSong.getPlayBack(), spotifySong.getPlayBack());
         assertEquals(foundSong.getTitle(), spotifySong.getTitle());
