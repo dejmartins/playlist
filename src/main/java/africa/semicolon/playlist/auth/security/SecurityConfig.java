@@ -2,7 +2,6 @@ package africa.semicolon.playlist.auth.security;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,8 +24,9 @@ public class SecurityConfig {
 
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final JwtAuthenticationFilter authenticationFilter;
+    private final String[] permittedRoutes = {"/api/v1/auth/signup", "/api/v1/auth/login", "api/v1/bankAccountDetails"};
 
-    private final String[] permittedRoutes = {"/api/v1/auth/signup", "/api/v1/auth/login"};
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
