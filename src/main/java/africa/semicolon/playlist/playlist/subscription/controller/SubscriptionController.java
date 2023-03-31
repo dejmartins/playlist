@@ -30,7 +30,7 @@ public class SubscriptionController {
     @Operation(summary = "Subscribe to a playlist",
             description = "Returns a Response entity containing the message and HTTP status code")
     @PostMapping("/subscribe")
-    public ResponseEntity<?> subscribeToPlaylist(
+    public ResponseEntity<ApiResponse> subscribeToPlaylist(
             @RequestParam
             @Parameter(name = "playlistId", description = "The id of the required playlist",
                     required = true, example = "1L") @Valid @NotNull
@@ -42,7 +42,7 @@ public class SubscriptionController {
     @Operation(summary = "Unsubscribe from a playlist",
             description = "Returns a Response entity containing the message and HTTP status code")
     @DeleteMapping("/unsubscribe")
-    public ResponseEntity<?> unsubscribeToPlaylist(
+    public ResponseEntity<ApiResponse> unsubscribeToPlaylist(
             @RequestParam
             @Parameter(name = "playlistId", description = "The id of the required playlist",
                     required = true, example = "1L") @Valid @NotNull
@@ -54,8 +54,8 @@ public class SubscriptionController {
 
     @Operation(summary = "Get all subscribers a playlist",
             description = "Returns a Set containing the subscribed users and HTTP status code")
-    @DeleteMapping("/subscribers")
-    public ResponseEntity<?> getSubscribers(
+    @GetMapping("/subscribers")
+    public ResponseEntity<Set<UserEntity>> getSubscribers(
             @RequestParam
             @Parameter(name = "playlistId", description = "The id of the required playlist",
                     required = true, example = "1L") @Valid @NotNull
@@ -67,7 +67,7 @@ public class SubscriptionController {
     @Operation(summary = "Get all subscribed to playlists",
             description = "Returns a set containing the playlists and HTTP status code")
     @GetMapping("/getPlaylists")
-    public ResponseEntity<?> getSubscribedPlaylists() {
+    public ResponseEntity<Set<PlayList>> getSubscribedPlaylists() {
         Set<PlayList> response = subscriberService.getSubscribedPlaylists();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -27,10 +27,10 @@ public class ContributorController {
     }
 
 
-    @PostMapping("/addContrib")
+    @PostMapping("/add")
     @Operation(summary = "Add a contributor to a playlist",
             description = "Returns a Response entity containing the message and HTTP status code")
-    public ResponseEntity<?> addContributorToPlaylist(
+    public ResponseEntity<ApiResponse> addContributorToPlaylist(
             @RequestParam
             @Parameter(name = "username", description = "The username of the User to be made a contributor",
                     required = true, example = "apex") @Valid @NotNull
@@ -47,7 +47,7 @@ public class ContributorController {
     @DeleteMapping("/removeContrib")
     @Operation(summary = "Remove a contributor from a playlist",
             description = "Returns a Response entity containing the message and HTTP status code")
-    public ResponseEntity<?> removeContributor(
+    public ResponseEntity<ApiResponse> removeContributor(
             @RequestParam
             @Parameter(name = "username", description = "The username of the User to be removed from contributor",
                     required = true, example = "apex") @Valid @NotNull
@@ -63,7 +63,7 @@ public class ContributorController {
     @GetMapping("/getPlaylists")
     @Operation(summary = "Get playlists for a user",
             description = "Returns a Response entity containing a set of playlists and HTTP status code")
-    public ResponseEntity<?> getPlaylistForUser() {
+    public ResponseEntity<Set<PlayList>> getPlaylistForUser() {
         Set<PlayList> response = contributorService.getPlaylistForUser();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -71,7 +71,7 @@ public class ContributorController {
     @GetMapping("/getAll")
     @Operation(summary = "Get contributors for a playlist",
             description = "Returns a Response entity containing a set of UserEntities and HTTP status code")
-    public ResponseEntity<?> getPlaylistContributors(@RequestParam
+    public ResponseEntity<Set<UserEntity>> getPlaylistContributors(@RequestParam
                                                      @Parameter(name = "playlistId", description = "The id of the required playlist",
                                                              required = true, example = "1L") @Valid @NotNull
                                                      Long playlistId) {
