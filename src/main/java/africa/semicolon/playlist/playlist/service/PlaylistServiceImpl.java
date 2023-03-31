@@ -145,5 +145,4 @@ public class PlaylistServiceImpl implements PlaylistService {
         playList.setCoverImage(url);
         playlistRepository.save(playList);
     }
-
 }
