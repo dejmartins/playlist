@@ -3,6 +3,7 @@ package africa.semicolon.playlist.playlist.subscription.service;
 import africa.semicolon.playlist.auth.services.AuthService;
 import africa.semicolon.playlist.config.ApiResponse;
 import africa.semicolon.playlist.exception.ContributorNotFoundException;
+import africa.semicolon.playlist.exception.SubscriptionNotFoundException;
 import africa.semicolon.playlist.exception.UnauthorizedActionException;
 import africa.semicolon.playlist.playlist.Contributor.service.ContributorService;
 import africa.semicolon.playlist.playlist.demo.PlayList;
@@ -70,7 +71,7 @@ public class SubscriberServiceImpl implements SubscriberService {
     @Override
     public ApiResponse unsubscribeFromPlaylist(PlayList playList) {
         UserEntity userEntity = authService.getCurrentUser();
-        Subscriber subscriber = subscriberRepository.findByUserAndPlayList(userEntity, playList).orElseThrow();
+        Subscriber subscriber = subscriberRepository.findByUserAndPlayList(userEntity, playList).orElseThrow(SubscriptionNotFoundException::new);
         subscriberRepository.delete(subscriber);
         return ApiResponse.builder()
                 .message("SUCCESSFUL")
@@ -81,7 +82,7 @@ public class SubscriberServiceImpl implements SubscriberService {
     @Override
     public ApiResponse removeUserFromPlaylist(UserEntity userEntity, PlayList playList) {
         if (!contributorService.isAuthor(authService.getCurrentUser(), playList)) throw new UnauthorizedActionException("Only the author can add new contributors");
-        Subscriber subscriber = subscriberRepository.findByUserAndPlayList(userEntity, playList).orElseThrow();
+        Subscriber subscriber = subscriberRepository.findByUserAndPlayList(userEntity, playList).orElseThrow(SubscriptionNotFoundException::new);
         subscriberRepository.delete(subscriber);
         return ApiResponse.builder()
                 .message("SUCCESSFUL")
@@ -117,7 +118,7 @@ public class SubscriberServiceImpl implements SubscriberService {
     public Set<PlayList> getSubscribedPlaylists() {
         UserEntity userEntity = authService.getCurrentUser();
         Set<PlayList> playListSet = new HashSet<>();
-        List<Subscriber> subscribers = subscriberRepository.findAllByUser(userEntity).orElseThrow();
+        List<Subscriber> subscribers = subscriberRepository.findAllByUser(userEntity).orElseThrow(SubscriptionNotFoundException::new);
         for (Subscriber aSubscriber : subscribers) {
             playListSet.add(aSubscriber.getPlayList());
         }
