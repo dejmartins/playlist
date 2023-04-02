@@ -85,13 +85,13 @@ public class PlaylistController {
 
     @Operation(summary = "Get A Particular Playlist by the playlist's id",
             description = "Returns an ApiResponse Response entity containing the operation details")
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{playlistId}")
     public ResponseEntity<ApiResponse> deletePlaylistBySlug(
-            @RequestParam
-            @Parameter(name = "slug", description = "The slug of the required playlist to be deleted",
-                    required = true, example = "Awake") @Valid @NotNull
-            String slug) {
-        ApiResponse response = playlistService.deletePlaylistBySlug(slug);
+            @PathVariable
+            @Parameter(name = "playlistId", description = "The id of the required playlist to be deleted",
+                    required = true, example = "1L") @Valid @NotNull
+            Long playlistId) {
+        ApiResponse response = playlistService.deletePlaylistById(playlistId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -99,16 +99,12 @@ public class PlaylistController {
     @Operation(summary = "Update A Particular Playlist's details",
             description = "Returns a Response entity containing the updated playlist and HTTP status code")
     @PatchMapping(value = "/update")
-    public ResponseEntity<FindPlaylistResponse> updatePlaylist(@RequestParam
+    public ResponseEntity<FindPlaylistResponse> updatePlaylist(@RequestBody
                                                 @Parameter(name = "UpdatePlaylistDetailsRequest", description = "Contains the required credentials to create a playlist as well as the id of the playlist to be updated. ",
-                                                        required = true, example = "1L") @Valid
+                                                        required = true)
                                             UpdatePlaylistDetailsRequest request){
-        try {
-            FindPlaylistResponse response = playlistService.updatePlaylistDetails(request);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }catch (Exception exception){
-            return ResponseEntity.badRequest().build();
-        }
+        FindPlaylistResponse response = playlistService.updatePlaylistDetails(request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Operation(summary = "Update A Particular Playlist's cover image",

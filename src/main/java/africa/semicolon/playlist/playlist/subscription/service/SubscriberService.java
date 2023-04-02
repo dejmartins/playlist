@@ -2,8 +2,9 @@ package africa.semicolon.playlist.playlist.subscription.service;
 
 import africa.semicolon.playlist.config.ApiResponse;
 import africa.semicolon.playlist.playlist.demo.PlayList;
+import africa.semicolon.playlist.playlist.dto.PageDto;
 import africa.semicolon.playlist.user.data.models.UserEntity;
-import java.util.Set;
+import org.springframework.data.domain.Pageable;
 
 public interface SubscriberService {
 
@@ -15,7 +16,7 @@ public interface SubscriberService {
 
     boolean isSubscribed(Long playlistId);
 
-    ApiResponse unsubscribeFromPlaylist(Long playlistId);
+    ApiResponse unsubscribeFromPlaylist(String playlistSlug);
 
     ApiResponse unsubscribeFromPlaylist(PlayList playList);
 
@@ -23,10 +24,10 @@ public interface SubscriberService {
 
     ApiResponse removeUserFromPlaylist(String userName, Long playlistId);
 
-    Set<UserEntity> getSubscribers(Long playlistId);
+    PageDto<UserEntity> getSubscribers(Long playlistId, Pageable pageable);
 
-    Set<UserEntity> getSubscribers(PlayList playList);
+    PageDto<UserEntity> getSubscribers(PlayList playList, Pageable pageable);
 
-    Set<PlayList> getSubscribedPlaylists();
+    PageDto<PlayList> getSubscribedPlaylists(Pageable pageable);
 
 }
