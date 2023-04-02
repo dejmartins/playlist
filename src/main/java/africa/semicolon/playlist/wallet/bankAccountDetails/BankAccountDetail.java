@@ -1,6 +1,5 @@
 package africa.semicolon.playlist.wallet.bankAccountDetails;
 
-import africa.semicolon.playlist.user.data.models.User;
 import africa.semicolon.playlist.user.data.models.UserEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

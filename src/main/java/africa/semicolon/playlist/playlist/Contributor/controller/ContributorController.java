@@ -4,6 +4,7 @@ import africa.semicolon.playlist.config.ApiResponse;
 import africa.semicolon.playlist.playlist.Contributor.service.ContributorService;
 import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.user.data.models.UserEntity;
+import africa.semicolon.playlist.user.dto.response.UserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
@@ -31,11 +32,11 @@ public class ContributorController {
     @Operation(summary = "Add a contributor to a playlist",
             description = "Returns a Response entity containing the message and HTTP status code")
     public ResponseEntity<ApiResponse> addContributorToPlaylist(
-            @RequestParam
+            @RequestBody
             @Parameter(name = "username", description = "The username of the User to be made a contributor",
                     required = true, example = "apex") @Valid @NotNull
             String username,
-            @RequestParam
+            @RequestBody
             @Parameter(name = "playlistId", description = "The id of the required playlist",
                     required = true, example = "1L") @Valid @NotNull
             Long playlistId) {
@@ -44,15 +45,15 @@ public class ContributorController {
     }
 
 
-    @DeleteMapping("/removeContrib")
+    @DeleteMapping("/{playlistId}/{username}")
     @Operation(summary = "Remove a contributor from a playlist",
             description = "Returns a Response entity containing the message and HTTP status code")
     public ResponseEntity<ApiResponse> removeContributor(
-            @RequestParam
+            @PathVariable
             @Parameter(name = "username", description = "The username of the User to be removed from contributor",
                     required = true, example = "apex") @Valid @NotNull
             String username,
-            @RequestParam
+            @PathVariable
             @Parameter(name = "playlistId", description = "The id of the required playlist",
                     required = true, example = "1L") @Valid @NotNull
             Long playlistId) {
@@ -71,11 +72,11 @@ public class ContributorController {
     @GetMapping("/getAll")
     @Operation(summary = "Get contributors for a playlist",
             description = "Returns a Response entity containing a set of UserEntities and HTTP status code")
-    public ResponseEntity<Set<UserEntity>> getPlaylistContributors(@RequestParam
+    public ResponseEntity<Set<UserDto>> getPlaylistContributors(@RequestParam
                                                      @Parameter(name = "playlistId", description = "The id of the required playlist",
                                                              required = true, example = "1L") @Valid @NotNull
                                                      Long playlistId) {
-        Set<UserEntity> response = contributorService.getPlaylistContributors(playlistId);
+        Set<UserDto> response = contributorService.getPlaylistContributors(playlistId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

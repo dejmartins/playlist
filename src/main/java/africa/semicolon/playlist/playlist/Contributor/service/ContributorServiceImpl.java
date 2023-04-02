@@ -8,10 +8,15 @@ import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.playlist.Contributor.demoContributor.Contributor;
 import africa.semicolon.playlist.playlist.Contributor.repository.ContributorRepository;
 import africa.semicolon.playlist.user.data.models.UserEntity;
+import africa.semicolon.playlist.user.dto.response.UserDto;
 import africa.semicolon.playlist.user.service.UserEntityService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,6 +29,7 @@ public class ContributorServiceImpl implements ContributorService {
     private final ContributorRepository contributorRepository;
     private final AuthService authService;
     private final UserEntityService userEntityService;
+    private final ModelMapper mapper;
 
 
     @Override
@@ -89,9 +95,13 @@ public class ContributorServiceImpl implements ContributorService {
     }
 
     @Override
-    public Set<UserEntity> getPlaylistContributors(Long playlistId) {
+    public Set<UserDto> getPlaylistContributors(Long playlistId) {
         PlayList foundPlaylist = PlayList.builder().id(playlistId).build();
-        return getPlaylistContributors(foundPlaylist);
+
+        Type userDtoTypeToken = new TypeToken<Set<UserDto>>() {
+        }.getType();
+
+        return mapper.map(getPlaylistContributors(foundPlaylist), userDtoTypeToken);
     }
 
     @Override

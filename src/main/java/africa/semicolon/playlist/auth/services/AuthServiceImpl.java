@@ -50,8 +50,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenResponseDto createAccount(SignupRequestDto requestDto) {
-        if (userRepository.existsByEmailAddress(requestDto.getEmail())) {
-            throw new UserAlreadyExistsException();
+        if (userRepository.existsByEmailAddressOrUsername(requestDto.getEmail(), requestDto.getUsername())) {
+            throw new UserAlreadyExistsException("Email or Username has already been used");
         }
 
         Wallet wallet = createWallet();
@@ -61,6 +61,7 @@ public class AuthServiceImpl implements AuthService {
                 .firstName(requestDto.getFirstName())
                 .lastName(requestDto.getLastName())
                 .emailAddress(requestDto.getEmail())
+                .username(requestDto.getUsername())
                 .password(passwordEncoder.encode(requestDto.getPassword()))
                 .wallet(wallet)
                 .build();
