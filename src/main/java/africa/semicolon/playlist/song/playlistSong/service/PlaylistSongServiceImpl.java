@@ -53,7 +53,7 @@ public class PlaylistSongServiceImpl implements PlaylistSongService {
     public ApiResponse addSongToPlayList(PlayList playList, Song song) {
         UserEntity currentUser = authService.getCurrentUser();
         if (!contributorService.getPlaylistContributors(playList).contains(currentUser)) throw new UnauthorizedActionException("You are not permitted to delete this playlist!");
-        Song foundSong = songService.findSongById(song.getSongId());
+        Song foundSong = songService.getSongById(song.getSongId());
         PlaylistSongEntity playlistSongEntity = PlaylistSongEntity.builder()
                 .song(foundSong)
                 .playList(playList)
@@ -74,7 +74,7 @@ public class PlaylistSongServiceImpl implements PlaylistSongService {
         for (Song aSong: songs) {
             Song foundSong;
             try {
-                foundSong = songService.findSongById(aSong.getSongId());
+                foundSong = songService.getSongById(aSong.getSongId());
             }
             catch (SongNotFoundException songNotFoundException) {
                 numberOfUnsavedSongs++;
@@ -100,7 +100,7 @@ public class PlaylistSongServiceImpl implements PlaylistSongService {
     public ApiResponse deleteSongFromPlayList(PlayList playList, Song song) {
         UserEntity currentUser = authService.getCurrentUser();
         if (!contributorService.getPlaylistContributors(playList).contains(currentUser)) throw new UnauthorizedActionException("You are not permitted to delete this playlist!");
-        Song foundSong = songService.findSongById(song.getSongId());
+        Song foundSong = songService.getSongById(song.getSongId());
         PlaylistSongEntity playlistSongEntity = playlistSongRepository.findByPlayListAndSong(playList, foundSong).orElseThrow(PlaylistNotFoundException::new);
         playlistSongRepository.delete(playlistSongEntity);
         return ApiResponse.builder()
@@ -129,7 +129,7 @@ public class PlaylistSongServiceImpl implements PlaylistSongService {
     @Override
     public ApiResponse addSongToPlayList(Long playlistId, Long songId) {
         PlayList foundPlaylist = playlistService.privateFindPlaylistById(playlistId);
-        Song foundSong = songService.findSongById(songId);
+        Song foundSong = songService.getSongById(songId);
         return addSongToPlayList(foundPlaylist, foundSong);
     }
 
@@ -142,7 +142,7 @@ public class PlaylistSongServiceImpl implements PlaylistSongService {
     @Override
     public ApiResponse deleteSongFromPlayList(Long playlistId, Long songId) {
         PlayList foundPlaylist = playlistService.privateFindPlaylistById(playlistId);
-        Song foundSong = songService.findSongById(songId);
+        Song foundSong = songService.getSongById(songId);
         return deleteSongFromPlayList(foundPlaylist, foundSong);
     }
 

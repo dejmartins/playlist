@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LikedSongRepository extends JpaRepository<LikedSong, Long> {
-    Optional<LikedSong> findLikedSongBySong_TitleAndUserEntity_Id(String songTitle, Long userEntityId);
-    List<LikedSong> findLikedSongByUserEntity_IdAndSong_Title(Long userEntity, String songTitle);
+    Optional<LikedSong> findLikedSongByUserEntity_IdAndSong_SongId(Long userEntityId, Long userId);
+    List<LikedSong> findAllByUserEntity_Id(Long userEntityId);
 }

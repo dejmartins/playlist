@@ -22,10 +22,10 @@ import java.util.Date;
 public class SpotifyService {
 
 
-    @Value("${spotify.client.id}")
+    @Value("${client-id}")
     private String clientId;
 
-    @Value("${spotify.client.secret}")
+    @Value("${client-secret}")
     private String clientSecret;
 
 
