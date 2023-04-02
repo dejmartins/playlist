@@ -8,7 +8,6 @@ import africa.semicolon.playlist.song.demoSong.repository.SongRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
 import static africa.semicolon.playlist.config.utilities.PlaylistUtilities.SONG_NOT_FOUND;
 
 @Service
@@ -33,7 +32,6 @@ public class SongServiceImpl implements SongService {
         }
     }
 
-    @Override
     public Song getSongById(Long songId) {
         return songRepository.findById(songId)
                 .orElseThrow(()-> new SongNotFoundException(SONG_NOT_FOUND));
