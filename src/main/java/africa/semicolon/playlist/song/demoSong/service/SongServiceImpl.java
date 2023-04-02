@@ -52,6 +52,11 @@ public class SongServiceImpl implements SongService {
         }
     }
 
+    @Override
+    public Song findSongById(Long songId) {
+        return songRepository.findById(songId).orElseThrow(() -> new SongNotFoundException(SONG_NOT_FOUND));
+    }
+
     private Song getSongFromSpotify(String songTitle) {
         return spotifyService.findingSong(songTitle);
     }

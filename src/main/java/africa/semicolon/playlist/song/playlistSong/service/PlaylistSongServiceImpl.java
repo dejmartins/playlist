@@ -4,9 +4,11 @@ import africa.semicolon.playlist.auth.services.AuthService;
 import africa.semicolon.playlist.config.ApiResponse;
 import africa.semicolon.playlist.exception.PlaylistNotFoundException;
 import africa.semicolon.playlist.exception.PlaylistSongNotFoundException;
+import africa.semicolon.playlist.exception.SongNotFoundException;
 import africa.semicolon.playlist.exception.UnauthorizedActionException;
 import africa.semicolon.playlist.playlist.Contributor.service.ContributorService;
 import africa.semicolon.playlist.playlist.demo.PlayList;
+import africa.semicolon.playlist.playlist.dto.PageDto;
 import africa.semicolon.playlist.playlist.service.PlaylistService;
 import africa.semicolon.playlist.song.demoSong.service.SongService;
 import africa.semicolon.playlist.song.playlistSong.demo.PlaylistSongEntity;
@@ -14,8 +16,17 @@ import africa.semicolon.playlist.song.playlistSong.repository.PlaylistSongReposi
 import africa.semicolon.playlist.song.demoSong.model.Song;
 import africa.semicolon.playlist.user.data.models.UserEntity;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,12 +46,16 @@ public class PlaylistSongServiceImpl implements PlaylistSongService {
 
     private final SongService songService;
 
+    private final ModelMapper mapper;
+
+
     @Override
     public ApiResponse addSongToPlayList(PlayList playList, Song song) {
         UserEntity currentUser = authService.getCurrentUser();
         if (!contributorService.getPlaylistContributors(playList).contains(currentUser)) throw new UnauthorizedActionException("You are not permitted to delete this playlist!");
+        Song foundSong = songService.findSongById(song.getSongId());
         PlaylistSongEntity playlistSongEntity = PlaylistSongEntity.builder()
-                .song(song)
+                .song(foundSong)
                 .playList(playList)
                 .build();
         playlistSongRepository.save(playlistSongEntity);
@@ -53,21 +68,31 @@ public class PlaylistSongServiceImpl implements PlaylistSongService {
     @Override
     public ApiResponse addSongsToPlayList(PlayList playList, List<Song> songs) {
         UserEntity currentUser = authService.getCurrentUser();
-        if (!contributorService.getPlaylistContributors(playList).contains(currentUser)) throw new UnauthorizedActionException("You are not permitted to delete this playlist!");
+        if (!contributorService.getPlaylistContributors(playList).contains(currentUser)) throw new UnauthorizedActionException("You are not permitted to add songs this playlist!");
         Set<PlaylistSongEntity> playlistSongEntitySet = new HashSet<>();
-
+        int numberOfUnsavedSongs = 0;
         for (Song aSong: songs) {
+            Song foundSong;
+            try {
+                foundSong = songService.findSongById(aSong.getSongId());
+            }
+            catch (SongNotFoundException songNotFoundException) {
+                numberOfUnsavedSongs++;
+                continue;
+            }
+            if (foundSong == null) continue;
             PlaylistSongEntity playlistSongEntity = PlaylistSongEntity.builder()
                     .playList(playList)
-                    .song(aSong)
+                    .song(foundSong)
                     .build();
             playlistSongEntitySet.add(playlistSongEntity);
         }
 
+        int numberOfSavedSongs = songs.size() - numberOfUnsavedSongs;
         playlistSongRepository.saveAll(playlistSongEntitySet);
         return ApiResponse.builder()
                 .status(HttpStatus.OK)
-                .message("SUCCESSFUL")
+                .message("SUCCESSFUL : " + numberOfSavedSongs + "\nUNSUCCESSFUL: " + numberOfUnsavedSongs)
                 .build();
     }
 
@@ -75,7 +100,8 @@ public class PlaylistSongServiceImpl implements PlaylistSongService {
     public ApiResponse deleteSongFromPlayList(PlayList playList, Song song) {
         UserEntity currentUser = authService.getCurrentUser();
         if (!contributorService.getPlaylistContributors(playList).contains(currentUser)) throw new UnauthorizedActionException("You are not permitted to delete this playlist!");
-        PlaylistSongEntity playlistSongEntity = playlistSongRepository.findByPlayListAndSong(playList, song).orElseThrow(PlaylistNotFoundException::new);
+        Song foundSong = songService.findSongById(song.getSongId());
+        PlaylistSongEntity playlistSongEntity = playlistSongRepository.findByPlayListAndSong(playList, foundSong).orElseThrow(PlaylistNotFoundException::new);
         playlistSongRepository.delete(playlistSongEntity);
         return ApiResponse.builder()
                 .status(HttpStatus.OK)
@@ -84,19 +110,26 @@ public class PlaylistSongServiceImpl implements PlaylistSongService {
     }
 
     @Override
-    public Set<Song> getSongsInPlaylist(PlayList playList) {
+    public PageDto<Song> getSongsInPlaylist(PlayList playList, Pageable pageable) {
         List<PlaylistSongEntity> playlistSongEntity = playlistSongRepository.findByPlayList(playList).orElseThrow(PlaylistSongNotFoundException::new);
-        Set<Song> songsInPlaylist = new HashSet<>();
+        List<Song> songsInPlaylist = new ArrayList<>();
         for (PlaylistSongEntity aPlaylistSongEntity : playlistSongEntity) {
             songsInPlaylist.add(aPlaylistSongEntity.getSong());
         }
-        return songsInPlaylist;
+
+        Pageable defaultPageable = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize());
+        Page<Song> pending = new PageImpl<>(songsInPlaylist, defaultPageable, songsInPlaylist.size());
+        Type pageDtoTypeToken = new TypeToken<PageDto<UserEntity>>() {
+        }.getType();
+        return mapper.map(pending, pageDtoTypeToken);
     }
 
     @Override
-    public ApiResponse addSongToPlayList(Long playlistId, String songTitle) {
+    public ApiResponse addSongToPlayList(Long playlistId, Long songId) {
         PlayList foundPlaylist = playlistService.privateFindPlaylistById(playlistId);
-        Song foundSong = songService.getSongBySongTitle(songTitle);
+        Song foundSong = songService.findSongById(songId);
         return addSongToPlayList(foundPlaylist, foundSong);
     }
 
@@ -107,16 +140,16 @@ public class PlaylistSongServiceImpl implements PlaylistSongService {
     }
 
     @Override
-    public ApiResponse deleteSongFromPlayList(Long playlistId, String songTitle) {
+    public ApiResponse deleteSongFromPlayList(Long playlistId, Long songId) {
         PlayList foundPlaylist = playlistService.privateFindPlaylistById(playlistId);
-        Song foundSong = songService.getSongBySongTitle(songTitle);
+        Song foundSong = songService.findSongById(songId);
         return deleteSongFromPlayList(foundPlaylist, foundSong);
     }
 
     @Override
-    public Set<Song> getSongsInPlaylist(Long playlistId) {
+    public PageDto<Song> getSongsInPlaylist(Long playlistId, Pageable pageable) {
         PlayList foundPlaylist = playlistService.privateFindPlaylistById(playlistId);
-        return getSongsInPlaylist(foundPlaylist);
+        return getSongsInPlaylist(foundPlaylist, pageable);
     }
 
 }

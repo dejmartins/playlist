@@ -2,9 +2,11 @@ package africa.semicolon.playlist.song.playlistSong.service;
 
 import africa.semicolon.playlist.config.ApiResponse;
 import africa.semicolon.playlist.playlist.demo.PlayList;
+import africa.semicolon.playlist.playlist.dto.PageDto;
 import africa.semicolon.playlist.song.demoSong.model.Song;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
-import java.util.Set;
 
 public interface PlaylistSongService {
 
@@ -14,14 +16,14 @@ public interface PlaylistSongService {
 
     ApiResponse deleteSongFromPlayList(PlayList playList, Song song);
 
-    Set<Song> getSongsInPlaylist(PlayList playList);
+    PageDto<Song> getSongsInPlaylist(PlayList playList, Pageable pageable);
 
-    ApiResponse addSongToPlayList(Long playlistId, String songTitle);
+    ApiResponse addSongToPlayList(Long playlistId, Long songId);
 
     ApiResponse addSongsToPlayList(Long playlistId, List<Song> songs);
 
-    ApiResponse deleteSongFromPlayList(Long playlistId, String songTitle);
+    ApiResponse deleteSongFromPlayList(Long playlistId, Long songId);
 
-    Set<Song> getSongsInPlaylist(Long playlistId);
+    PageDto<Song> getSongsInPlaylist(Long playlistId, Pageable pageable);
 
 }

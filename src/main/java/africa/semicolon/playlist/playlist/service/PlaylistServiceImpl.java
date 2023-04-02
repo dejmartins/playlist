@@ -62,7 +62,7 @@ public class PlaylistServiceImpl implements PlaylistService {
         return ApiResponse
                 .builder()
                 .status(HttpStatus.OK)
-                .message("SUCCESS")
+                .message(imageUrl)
                 .build();
     }
 
@@ -139,6 +139,11 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     public PlayList privateFindPlaylistById(Long playlistId) {
         return playlistRepository.findById(playlistId).orElseThrow(PlaylistNotFoundException::new);
+    }
+
+    @Override
+    public PlayList privateFindPlaylistBySlug(String playlistSlug) {
+        return playlistRepository.findBySlug(playlistSlug).orElseThrow(PlaylistNotFoundException::new);
     }
 
     private void updatePlaylistProfileImage(String url, PlayList playList) {

@@ -10,4 +10,6 @@ public interface SongService {
     void saveSong(Song song);
 
     SongResponse searchSong(String songTitle);
+
+    Song findSongById(Long songId);
 }
