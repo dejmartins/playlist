@@ -5,6 +5,7 @@ import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.playlist.dto.PageDto;
 import africa.semicolon.playlist.playlist.subscription.service.SubscriberService;
 import africa.semicolon.playlist.user.data.models.UserEntity;
+import africa.semicolon.playlist.user.dto.response.UserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
@@ -58,12 +59,12 @@ public class SubscriptionController {
     @Operation(summary = "Get all subscribers a playlist",
             description = "Returns a Set containing the subscribed users and HTTP status code")
     @GetMapping("/subscribers/{playlistId}")
-    public ResponseEntity<PageDto<UserEntity>> getSubscribers(
+    public ResponseEntity<PageDto<UserDto>> getSubscribers(
             @PathVariable
             @Parameter(name = "playlistId", description = "The id of the required playlist",
                     required = true, example = "1L") @Valid @NotNull
             Long playlistId, @ParameterObject Pageable pageable) {
-        PageDto<UserEntity> response = subscriberService.getSubscribers(playlistId, pageable);
+        PageDto<UserDto> response = subscriberService.getSubscribers(playlistId, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

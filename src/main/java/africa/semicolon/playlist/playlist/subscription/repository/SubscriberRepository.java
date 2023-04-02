@@ -12,7 +12,7 @@ public interface SubscriberRepository extends JpaRepository<Subscriber, Long> {
 
     Optional<List<Subscriber>> findAllByUser(UserEntity userEntity);
 
-    Optional<List<Subscriber>> findAllByPlayList(PlayList playList);
+    List<Subscriber> findAllByPlayList(PlayList playList);
 
     Optional<Subscriber> findByUserAndPlayList(UserEntity userEntity, PlayList playList);
 }

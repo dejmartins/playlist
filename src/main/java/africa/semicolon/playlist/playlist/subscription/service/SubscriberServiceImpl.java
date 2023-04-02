@@ -12,6 +12,7 @@ import africa.semicolon.playlist.playlist.service.PlaylistService;
 import africa.semicolon.playlist.playlist.subscription.demoSubscriber.Subscriber;
 import africa.semicolon.playlist.playlist.subscription.repository.SubscriberRepository;
 import africa.semicolon.playlist.user.data.models.UserEntity;
+import africa.semicolon.playlist.user.dto.response.UserDto;
 import africa.semicolon.playlist.user.service.UserEntityService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -24,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -72,7 +74,7 @@ public class SubscriberServiceImpl implements SubscriberService {
     private Set<UserEntity> getSubscribers(PlayList playList) {
         if (!contributorService.isAuthor(authService.getCurrentUser(), playList)) throw new UnauthorizedActionException("Only the author can add new contributors");
         Set<UserEntity> userEntitySet = new HashSet<>();
-        List<Subscriber> subscribers = subscriberRepository.findAllByPlayList(playList).orElseThrow(ContributorNotFoundException::new);
+        List<Subscriber> subscribers = subscriberRepository.findAllByPlayList(playList);
         for (Subscriber aSubscriber : subscribers) {
             userEntitySet.add(aSubscriber.getUser());
         }
@@ -115,24 +117,20 @@ public class SubscriberServiceImpl implements SubscriberService {
     }
 
     @Override
-    public PageDto<UserEntity> getSubscribers(Long playlistId, Pageable pageable) {
+    public PageDto<UserDto> getSubscribers(Long playlistId, Pageable pageable) {
         PlayList foundPlaylist = playlistService.privateFindPlaylistById(playlistId);
         return getSubscribers(foundPlaylist, pageable);
     }
 
     @Override
-    public PageDto<UserEntity> getSubscribers(PlayList playList, Pageable pageable) {
-        if (!contributorService.isAuthor(authService.getCurrentUser(), playList)) throw new UnauthorizedActionException("Only the author can add new contributors");
-        List<UserEntity> userEntityList = new ArrayList<>();
-        List<Subscriber> subscribers = subscriberRepository.findAllByPlayList(playList).orElseThrow(ContributorNotFoundException::new);
-        for (Subscriber aSubscriber : subscribers) {
-            userEntityList.add(aSubscriber.getUser());
-        }
-        Pageable defaultPageable = PageRequest.of(
-                pageable.getPageNumber(),
-                pageable.getPageSize());
-        Page<UserEntity> pending = new PageImpl<>(userEntityList, defaultPageable, userEntityList.size());
-        Type pageDtoTypeToken = new TypeToken<PageDto<UserEntity>>() {
+    public PageDto<UserDto> getSubscribers(PlayList playList, Pageable pageable) {
+        if (!contributorService.isAuthor(authService.getCurrentUser(), playList))
+            throw new UnauthorizedActionException();
+        List<Subscriber> subscribers = subscriberRepository.findAllByPlayList(playList);
+        List<UserEntity> users = subscribers.stream().map((Subscriber::getUser)).toList();
+
+        Page<UserEntity> pending = new PageImpl<>(users, pageable, users.size());
+        Type pageDtoTypeToken = new TypeToken<PageDto<UserDto>>() {
         }.getType();
         return mapper.map(pending, pageDtoTypeToken);
     }

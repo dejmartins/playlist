@@ -4,6 +4,7 @@ import africa.semicolon.playlist.config.ApiResponse;
 import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.playlist.dto.PageDto;
 import africa.semicolon.playlist.user.data.models.UserEntity;
+import africa.semicolon.playlist.user.dto.response.UserDto;
 import org.springframework.data.domain.Pageable;
 
 public interface SubscriberService {
@@ -24,9 +25,9 @@ public interface SubscriberService {
 
     ApiResponse removeUserFromPlaylist(String userName, Long playlistId);
 
-    PageDto<UserEntity> getSubscribers(Long playlistId, Pageable pageable);
+    PageDto<UserDto> getSubscribers(Long playlistId, Pageable pageable);
 
-    PageDto<UserEntity> getSubscribers(PlayList playList, Pageable pageable);
+    PageDto<UserDto> getSubscribers(PlayList playList, Pageable pageable);
 
     PageDto<PlayList> getSubscribedPlaylists(Pageable pageable);
 
