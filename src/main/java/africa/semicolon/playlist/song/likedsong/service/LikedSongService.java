@@ -6,8 +6,8 @@ import org.springframework.data.domain.Page;
 
 public interface LikedSongService {
 
-   ApiResponse likeSong(Long userEntityId, String songTitle);
-   SongResponse findALikedSong(Long userEntityId, String songTitle);
-   Page<SongResponse> findAllLikedSongsByUser(Long userEntityId, String songTitle, int pageNumber);
-   ApiResponse dislikeSong(Long userEntityId, String songTitle);
+   ApiResponse likeSong(Long songId);
+   SongResponse findALikedSong(Long songId);
+   Page<SongResponse> findAllLikedSongsByUser(int pageNumber);
+   ApiResponse dislikeSong(Long songId);
 }

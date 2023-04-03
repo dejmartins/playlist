@@ -1,5 +1,6 @@
 package africa.semicolon.playlist.auth.security;
 
+
 import africa.semicolon.playlist.user.data.models.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

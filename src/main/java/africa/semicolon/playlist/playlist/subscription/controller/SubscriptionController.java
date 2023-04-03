@@ -2,17 +2,20 @@ package africa.semicolon.playlist.playlist.subscription.controller;
 
 import africa.semicolon.playlist.config.ApiResponse;
 import africa.semicolon.playlist.playlist.demo.PlayList;
+import africa.semicolon.playlist.playlist.dto.PageDto;
 import africa.semicolon.playlist.playlist.subscription.service.SubscriberService;
 import africa.semicolon.playlist.user.data.models.UserEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.Set;
+
 
 @RestController
 @RequestMapping("api/v1/subscription")
@@ -29,9 +32,9 @@ public class SubscriptionController {
 
     @Operation(summary = "Subscribe to a playlist",
             description = "Returns a Response entity containing the message and HTTP status code")
-    @PostMapping("/subscribe")
-    public ResponseEntity<?> subscribeToPlaylist(
-            @RequestParam
+    @PostMapping("/subscribe/{playlistId}")
+    public ResponseEntity<ApiResponse> subscribeToPlaylist(
+            @PathVariable
             @Parameter(name = "playlistId", description = "The id of the required playlist",
                     required = true, example = "1L") @Valid @NotNull
             Long playlistId) {
@@ -41,34 +44,34 @@ public class SubscriptionController {
 
     @Operation(summary = "Unsubscribe from a playlist",
             description = "Returns a Response entity containing the message and HTTP status code")
-    @DeleteMapping("/unsubscribe")
-    public ResponseEntity<?> unsubscribeToPlaylist(
-            @RequestParam
+    @DeleteMapping("/unsubscribe/{slug}")
+    public ResponseEntity<ApiResponse> unsubscribeToPlaylist(
+            @PathVariable
             @Parameter(name = "playlistId", description = "The id of the required playlist",
                     required = true, example = "1L") @Valid @NotNull
-            Long playlistId) {
-        ApiResponse response = subscriberService.unsubscribeFromPlaylist(playlistId);
+            String slug) {
+        ApiResponse response = subscriberService.unsubscribeFromPlaylist(slug);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 
     @Operation(summary = "Get all subscribers a playlist",
             description = "Returns a Set containing the subscribed users and HTTP status code")
-    @DeleteMapping("/subscribers")
-    public ResponseEntity<?> getSubscribers(
-            @RequestParam
+    @GetMapping("/subscribers/{playlistId}")
+    public ResponseEntity<PageDto<UserEntity>> getSubscribers(
+            @PathVariable
             @Parameter(name = "playlistId", description = "The id of the required playlist",
                     required = true, example = "1L") @Valid @NotNull
-            Long playlistId) {
-        Set<UserEntity> response = subscriberService.getSubscribers(playlistId);
+            Long playlistId, @ParameterObject Pageable pageable) {
+        PageDto<UserEntity> response = subscriberService.getSubscribers(playlistId, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Operation(summary = "Get all subscribed to playlists",
             description = "Returns a set containing the playlists and HTTP status code")
     @GetMapping("/getPlaylists")
-    public ResponseEntity<?> getSubscribedPlaylists() {
-        Set<PlayList> response = subscriberService.getSubscribedPlaylists();
+    public ResponseEntity<PageDto<PlayList>> getSubscribedPlaylists(@ParameterObject Pageable pageable) {
+        PageDto<PlayList> response = subscriberService.getSubscribedPlaylists(pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -87,4 +90,5 @@ public class SubscriptionController {
         ApiResponse response = subscriberService.removeUserFromPlaylist(username, playlistId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 }

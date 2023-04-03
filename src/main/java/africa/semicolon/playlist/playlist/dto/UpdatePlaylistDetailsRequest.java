@@ -14,11 +14,9 @@ import lombok.NoArgsConstructor;
 public class UpdatePlaylistDetailsRequest {
 
     private Long playlistId;
-    @NotNull
+
     private String name;
     private String description;
-    @NotNull
     private String slug;
-    @NotNull
     private Boolean isPublic;
 }

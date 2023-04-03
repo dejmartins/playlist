@@ -8,7 +8,6 @@ import africa.semicolon.playlist.song.demoSong.repository.SongRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
 import static africa.semicolon.playlist.config.utilities.PlaylistUtilities.SONG_NOT_FOUND;
 
 @Service
@@ -17,25 +16,6 @@ public class SongServiceImpl implements SongService {
     private final SongRepository songRepository;
     private final SpotifyService spotifyService;
     private final ModelMapper mapper;
-
-    @Override
-    public SongResponse getSongByTitle(String songTitle) {
-        Song song = songRepository.findSongByTitle(songTitle)
-                .orElseThrow(()->new SongNotFoundException(SONG_NOT_FOUND));
-
-        return mapper.map(song, SongResponse.class);
-    }
-
-    @Override
-    public Song getSongBySongTitle(String songTitle) {
-        return songRepository.findSongByTitle(songTitle)
-                .orElseThrow(()-> new SongNotFoundException(SONG_NOT_FOUND));
-    }
-
-    @Override
-    public void saveSong(Song song) {
-        songRepository.save(song);
-    }
 
     @Override
     public SongResponse searchSong(String songTitle) {
@@ -51,6 +31,25 @@ public class SongServiceImpl implements SongService {
             return mapper.map(savedSong, SongResponse.class);
         }
     }
+
+    public Song getSongById(Long songId) {
+        return songRepository.findById(songId)
+                .orElseThrow(()-> new SongNotFoundException(SONG_NOT_FOUND));
+    }
+
+    private SongResponse getSongByTitle(String songTitle) {
+        Song song = songRepository.findSongByTitle(songTitle)
+                .orElseThrow(()->new SongNotFoundException(SONG_NOT_FOUND));
+
+        return mapper.map(song, SongResponse.class);
+    }
+
+    @Override
+    public Song getSongBySongTitle(String songTitle) {
+        return songRepository.findSongByTitle(songTitle)
+                .orElseThrow(()->new SongNotFoundException(SONG_NOT_FOUND));
+    }
+
 
     private Song getSongFromSpotify(String songTitle) {
         return spotifyService.findingSong(songTitle);

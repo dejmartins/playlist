@@ -26,4 +26,6 @@ public interface PlaylistService {
 
     PlayList privateFindPlaylistById(Long playlistId);
 
+    PlayList privateFindPlaylistBySlug(String playlistSlug);
+
 }

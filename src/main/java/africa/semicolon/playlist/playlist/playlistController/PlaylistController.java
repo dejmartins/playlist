@@ -34,10 +34,10 @@ public class PlaylistController {
     @Operation(summary = "Create a new playlist",
             description = "Returns a Response entity containing the saved playlist and HTTP status code")
     @PostMapping("/create")
-    public ResponseEntity<?> createPlaylist(
+    public ResponseEntity<CreatePlaylistResponse> createPlaylist(
             @RequestBody
             @Parameter(name = "CreatePlaylistRequest", description = "The details required to create a playlist which are name, slug, description and isPublic",
-                    required = true) @Valid
+                    required = true)
             CreatePlaylistReq playlistReq) {
         CreatePlaylistResponse foundPlaylist = playlistService.createPlaylist(playlistReq);
         return new ResponseEntity<>(foundPlaylist, HttpStatus.OK);
@@ -47,7 +47,7 @@ public class PlaylistController {
     @Operation(summary = "Get A Particular Playlist by the playlist's slug",
             description = "Returns a Response entity containing the requested playlist and HTTP status code")
     @GetMapping("/find")
-    public ResponseEntity<?> getPlaylistBySlug(
+    public ResponseEntity<FindPlaylistResponse> getPlaylistBySlug(
             @RequestParam
             @Parameter(name = "slug", description = "The slug of the required playlist",
                     required = true, example = "Awake-vibes") @Valid @NotNull
@@ -85,13 +85,13 @@ public class PlaylistController {
 
     @Operation(summary = "Get A Particular Playlist by the playlist's id",
             description = "Returns an ApiResponse Response entity containing the operation details")
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deletePlaylistBySlug(
-            @RequestParam
-            @Parameter(name = "slug", description = "The slug of the required playlist to be deleted",
-                    required = true, example = "Awake") @Valid @NotNull
-            String slug) {
-        ApiResponse response = playlistService.deletePlaylistBySlug(slug);
+    @DeleteMapping("/delete/{playlistId}")
+    public ResponseEntity<ApiResponse> deletePlaylistBySlug(
+            @PathVariable
+            @Parameter(name = "playlistId", description = "The id of the required playlist to be deleted",
+                    required = true, example = "1L") @Valid @NotNull
+            Long playlistId) {
+        ApiResponse response = playlistService.deletePlaylistById(playlistId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -99,22 +99,18 @@ public class PlaylistController {
     @Operation(summary = "Update A Particular Playlist's details",
             description = "Returns a Response entity containing the updated playlist and HTTP status code")
     @PatchMapping(value = "/update")
-    public ResponseEntity<?> updatePlaylist(@RequestParam
+    public ResponseEntity<FindPlaylistResponse> updatePlaylist(@RequestBody
                                                 @Parameter(name = "UpdatePlaylistDetailsRequest", description = "Contains the required credentials to create a playlist as well as the id of the playlist to be updated. ",
-                                                        required = true, example = "1L") @Valid
+                                                        required = true)
                                             UpdatePlaylistDetailsRequest request){
-        try {
-            FindPlaylistResponse response = playlistService.updatePlaylistDetails(request);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }catch (Exception exception){
-            return ResponseEntity.badRequest().body(exception.getMessage());
-        }
+        FindPlaylistResponse response = playlistService.updatePlaylistDetails(request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Operation(summary = "Update A Particular Playlist's cover image",
             description = "Returns an ApiResponse Response entity containing the operation details")
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadPlaylistImage(@RequestParam(value = "file") MultipartFile file,
+    public ResponseEntity<ApiResponse> uploadPlaylistImage(@RequestParam(value = "file") MultipartFile file,
                                                  @RequestParam
                                                  @Parameter(name = "playlistId", description = "The id of the required playlist whose image is to be changed",
                                                          required = true, example = "1L") @Valid @NotNull
