@@ -4,6 +4,7 @@ import africa.semicolon.playlist.config.ApiResponse;
 import africa.semicolon.playlist.auth.services.AuthService;
 import africa.semicolon.playlist.exception.ContributorNotFoundException;
 import africa.semicolon.playlist.exception.UnauthorizedActionException;
+import africa.semicolon.playlist.playlist.Contributor.dto.ContributorDto;
 import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.playlist.Contributor.demoContributor.Contributor;
 import africa.semicolon.playlist.playlist.Contributor.repository.ContributorRepository;
@@ -11,6 +12,7 @@ import africa.semicolon.playlist.user.data.models.UserEntity;
 import africa.semicolon.playlist.user.dto.response.UserDto;
 import africa.semicolon.playlist.user.service.UserEntityService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ContributorServiceImpl implements ContributorService {
 
     private final ContributorRepository contributorRepository;
@@ -33,7 +36,7 @@ public class ContributorServiceImpl implements ContributorService {
 
 
     @Override
-    public ApiResponse addContributorToPlaylist(String username, PlayList playlist) {
+    public ContributorDto addContributorToPlaylist(String username, PlayList playlist) {
         if (!isAuthor(authService.getCurrentUser(), playlist)) throw new UnauthorizedActionException("Only the author can add new contributors");
         UserEntity userEntity = userEntityService.privateFindUserByUsername(username);
         Contributor newContributor = Contributor.builder()
@@ -41,11 +44,8 @@ public class ContributorServiceImpl implements ContributorService {
                 .playList(playlist)
                 .isAuthor(false)
                 .build();
-        contributorRepository.save(newContributor);
-        return ApiResponse.builder()
-                .message("SUCCESSFUL")
-                .status(HttpStatus.OK)
-                .build();
+        Contributor savedContributor = contributorRepository.save(newContributor);
+        return mapper.map(savedContributor, ContributorDto.class);
     }
 
     @Override
@@ -83,8 +83,9 @@ public class ContributorServiceImpl implements ContributorService {
     }
 
     @Override
-    public ApiResponse addContributorToPlaylist(String username, Long playlistId) {
+    public ContributorDto addContributorToPlaylist(String username, Long playlistId) {
         PlayList foundPlaylist = PlayList.builder().id(playlistId).build();
+        log.debug("FoundPlaylist -> {}", foundPlaylist);
         return addContributorToPlaylist(username, foundPlaylist);
     }
 
@@ -95,10 +96,10 @@ public class ContributorServiceImpl implements ContributorService {
     }
 
     @Override
-    public Set<UserDto> getPlaylistContributors(Long playlistId) {
+    public Set<ContributorDto> getPlaylistContributors(Long playlistId) {
         PlayList foundPlaylist = PlayList.builder().id(playlistId).build();
 
-        Type userDtoTypeToken = new TypeToken<Set<UserDto>>() {
+        Type userDtoTypeToken = new TypeToken<Set<ContributorDto>>() {
         }.getType();
 
         return mapper.map(getPlaylistContributors(foundPlaylist), userDtoTypeToken);

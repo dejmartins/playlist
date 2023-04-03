@@ -1,6 +1,7 @@
 package africa.semicolon.playlist.playlist.Contributor.controller;
 
 import africa.semicolon.playlist.config.ApiResponse;
+import africa.semicolon.playlist.playlist.Contributor.dto.ContributorDto;
 import africa.semicolon.playlist.playlist.Contributor.service.ContributorService;
 import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.user.data.models.UserEntity;
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("api/v1/contributor")
+@Slf4j
 public class ContributorController {
 
     private final ContributorService contributorService;
@@ -28,19 +31,20 @@ public class ContributorController {
     }
 
 
-    @PostMapping("/add")
+    @PostMapping("/add/{playlistId}/{username}")
     @Operation(summary = "Add a contributor to a playlist",
             description = "Returns a Response entity containing the message and HTTP status code")
-    public ResponseEntity<ApiResponse> addContributorToPlaylist(
-            @RequestBody
+    public ResponseEntity<ContributorDto> addContributorToPlaylist(
+            @PathVariable
             @Parameter(name = "username", description = "The username of the User to be made a contributor",
-                    required = true, example = "apex") @Valid @NotNull
+                    required = true, example = "apex")
             String username,
-            @RequestBody
+            @PathVariable
             @Parameter(name = "playlistId", description = "The id of the required playlist",
-                    required = true, example = "1L") @Valid @NotNull
+                    required = true, example = "1L")
             Long playlistId) {
-        ApiResponse response = contributorService.addContributorToPlaylist(username, playlistId);
+        log.info("Request to add contributor to playlist");
+        ContributorDto response = contributorService.addContributorToPlaylist(username, playlistId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -72,11 +76,11 @@ public class ContributorController {
     @GetMapping("/getAll")
     @Operation(summary = "Get contributors for a playlist",
             description = "Returns a Response entity containing a set of UserEntities and HTTP status code")
-    public ResponseEntity<Set<UserDto>> getPlaylistContributors(@RequestParam
+    public ResponseEntity<Set<ContributorDto>> getPlaylistContributors(@RequestParam
                                                      @Parameter(name = "playlistId", description = "The id of the required playlist",
                                                              required = true, example = "1L") @Valid @NotNull
                                                      Long playlistId) {
-        Set<UserDto> response = contributorService.getPlaylistContributors(playlistId);
+        Set<ContributorDto> response = contributorService.getPlaylistContributors(playlistId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

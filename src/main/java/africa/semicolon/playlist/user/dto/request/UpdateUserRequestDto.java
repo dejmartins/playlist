@@ -18,7 +18,7 @@ public class UpdateUserRequestDto {
 
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email")
-    private String email;
+    private String emailAddress;
 
     @NotBlank(message = "Username is required")
     @Pattern(regexp = RegexPatterns.USERNAME, message = "Invalid characters found in username")
