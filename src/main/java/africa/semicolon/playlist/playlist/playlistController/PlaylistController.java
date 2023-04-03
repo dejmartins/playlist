@@ -37,7 +37,7 @@ public class PlaylistController {
     public ResponseEntity<CreatePlaylistResponse> createPlaylist(
             @RequestBody
             @Parameter(name = "CreatePlaylistRequest", description = "The details required to create a playlist which are name, slug, description and isPublic",
-                    required = true) @Valid
+                    required = true)
             CreatePlaylistReq playlistReq) {
         CreatePlaylistResponse foundPlaylist = playlistService.createPlaylist(playlistReq);
         return new ResponseEntity<>(foundPlaylist, HttpStatus.OK);

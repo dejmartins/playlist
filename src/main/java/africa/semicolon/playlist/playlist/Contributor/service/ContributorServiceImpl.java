@@ -7,11 +7,19 @@ import africa.semicolon.playlist.exception.UnauthorizedActionException;
 import africa.semicolon.playlist.playlist.demo.PlayList;
 import africa.semicolon.playlist.playlist.Contributor.demoContributor.Contributor;
 import africa.semicolon.playlist.playlist.Contributor.repository.ContributorRepository;
+import africa.semicolon.playlist.playlist.dto.PageDto;
 import africa.semicolon.playlist.user.data.models.UserEntity;
 import africa.semicolon.playlist.user.service.UserEntityService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,11 +32,13 @@ public class ContributorServiceImpl implements ContributorService {
     private final ContributorRepository contributorRepository;
     private final AuthService authService;
     private final UserEntityService userEntityService;
+    private final ModelMapper mapper;
 
 
     @Override
     public ApiResponse addContributorToPlaylist(String username, PlayList playlist) {
         if (!isAuthor(authService.getCurrentUser(), playlist)) throw new UnauthorizedActionException("Only the author can add new contributors");
+        if (checkIfContributorExistsAlready(username, playlist)) throw new UnauthorizedActionException("Contributor already exists!");
         UserEntity userEntity = userEntityService.privateFindUserByUsername(username);
         Contributor newContributor = Contributor.builder()
                 .user(userEntity)
@@ -55,25 +65,24 @@ public class ContributorServiceImpl implements ContributorService {
     }
 
     @Override
-    public Set<PlayList> getPlaylistForUser() {
+    public PageDto<PlayList> getPlaylistForUser(Pageable pageable) {
         UserEntity userEntity = authService.getCurrentUser();
-        List<Contributor> foundContributor = contributorRepository.findAllByUser(userEntity).orElseThrow(ContributorNotFoundException::new);
-        Set<PlayList> userPlaylists = new HashSet<>();
-        for (Contributor contributor : foundContributor) {
-            userPlaylists.add(contributor.getPlayList());
-        }
-        return userPlaylists;
+        List<Contributor> foundContributor = contributorRepository.findAllByUser(userEntity);
+        List<PlayList> playlists = foundContributor.stream().map(Contributor::getPlayList).toList();
+        Page<PlayList> pending = new PageImpl<>(playlists, pageable, playlists.size());
+        Type pageDtoTypeToken = new TypeToken<PageDto<PlayList>>() {
+        }.getType();
+        return mapper.map(pending, pageDtoTypeToken);
     }
 
     @Override
-    public Set<UserEntity> getPlaylistContributors(PlayList playlist) {
-        if (!isAuthor(authService.getCurrentUser(), playlist)) throw new UnauthorizedActionException("Only the author can remove contributors");
-        List<Contributor> foundContributor = contributorRepository.findAllByPlayList(playlist).orElseThrow(ContributorNotFoundException::new);
-        Set<UserEntity> users = new HashSet<>();
-        for (Contributor contributor : foundContributor) {
-            users.add(contributor.getUser());
-        }
-        return users;
+    public PageDto<UserEntity> getPlaylistContributors(PlayList playlist, Pageable pageable) {
+        List<Contributor> foundContributor = contributorRepository.findAllByPlayList(playlist);
+        List<UserEntity> users = foundContributor.stream().map(Contributor::getUser).toList();
+        Page<UserEntity> pending = new PageImpl<>(users, pageable, users.size());
+        Type pageDtoTypeToken = new TypeToken<PageDto<UserEntity>>() {
+        }.getType();
+        return mapper.map(pending, pageDtoTypeToken);
     }
 
     @Override
@@ -89,9 +98,9 @@ public class ContributorServiceImpl implements ContributorService {
     }
 
     @Override
-    public Set<UserEntity> getPlaylistContributors(Long playlistId) {
+    public PageDto<UserEntity> getPlaylistContributors(Long playlistId, Pageable pageable) {
         PlayList foundPlaylist = PlayList.builder().id(playlistId).build();
-        return getPlaylistContributors(foundPlaylist);
+        return getPlaylistContributors(foundPlaylist, pageable);
     }
 
     @Override
@@ -126,6 +135,31 @@ public class ContributorServiceImpl implements ContributorService {
     public boolean isAuthor(Long playlistId) {
         PlayList foundPlaylist = PlayList.builder().id(playlistId).build();
         return isAuthor(foundPlaylist);
+    }
+
+    private boolean checkIfContributorExistsAlready(String username, PlayList playlist) {
+        List<Contributor> allContributors = contributorRepository.findAllByPlayList(playlist);
+        for (Contributor contributor : allContributors) {
+            if (contributor.getUser().getUsername().equals(username)) return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Set<UserEntity> getPlaylistContributors(Long playlistId) {
+        PlayList foundPlaylist = PlayList.builder().id(playlistId).build();
+        return getPlaylistContributors(foundPlaylist);
+    }
+
+    @Override
+    public Set<UserEntity> getPlaylistContributors(PlayList playlist) {
+        if (!isAuthor(authService.getCurrentUser(), playlist)) throw new UnauthorizedActionException("Only the author can remove contributors");
+        List<Contributor> foundContributor = contributorRepository.findAllByPlayList(playlist);
+        Set<UserEntity> users = new HashSet<>();
+        for (Contributor contributor : foundContributor) {
+            users.add(contributor.getUser());
+        }
+        return users;
     }
 
 }

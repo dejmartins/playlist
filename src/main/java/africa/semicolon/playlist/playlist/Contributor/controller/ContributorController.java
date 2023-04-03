@@ -3,17 +3,19 @@ package africa.semicolon.playlist.playlist.Contributor.controller;
 import africa.semicolon.playlist.config.ApiResponse;
 import africa.semicolon.playlist.playlist.Contributor.service.ContributorService;
 import africa.semicolon.playlist.playlist.demo.PlayList;
+import africa.semicolon.playlist.playlist.dto.PageDto;
 import africa.semicolon.playlist.user.data.models.UserEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
 
 @RestController
 @RequestMapping("api/v1/contributor")
@@ -63,19 +65,19 @@ public class ContributorController {
     @GetMapping("/getPlaylists")
     @Operation(summary = "Get playlists for a user",
             description = "Returns a Response entity containing a set of playlists and HTTP status code")
-    public ResponseEntity<Set<PlayList>> getPlaylistForUser() {
-        Set<PlayList> response = contributorService.getPlaylistForUser();
+    public ResponseEntity<PageDto<PlayList>> getPlaylistForUser(@ParameterObject Pageable pageable) {
+        PageDto<PlayList> response = contributorService.getPlaylistForUser(pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/getAll")
     @Operation(summary = "Get contributors for a playlist",
             description = "Returns a Response entity containing a set of UserEntities and HTTP status code")
-    public ResponseEntity<Set<UserEntity>> getPlaylistContributors(@RequestParam
+    public ResponseEntity<PageDto<UserEntity>> getPlaylistContributors(@RequestParam
                                                      @Parameter(name = "playlistId", description = "The id of the required playlist",
                                                              required = true, example = "1L") @Valid @NotNull
-                                                     Long playlistId) {
-        Set<UserEntity> response = contributorService.getPlaylistContributors(playlistId);
+                                                     Long playlistId, @ParameterObject Pageable pageable) {
+        PageDto<UserEntity> response = contributorService.getPlaylistContributors(playlistId, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
